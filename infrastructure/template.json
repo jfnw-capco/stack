@@ -1,6 +1,6 @@
 {
   "variables": {
-    "do_api_token": "f1d0ae37ffe3c8c6cfba3ef414f9659f16b4e1fa3b5276f4d3d5fdeff8acfc09"
+    "do_api_token": "{{env `DO_API_TOKEN`}}"
   },
   "builders": [{
     "type": "digitalocean",
