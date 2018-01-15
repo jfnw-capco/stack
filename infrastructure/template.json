@@ -9,5 +9,10 @@
     "region": "nyc3",
     "size": "512mb",
     "ssh_username": "root"
+  }],
+  "post-processors": [{
+    "type": "manifest",
+    "output": "manifest.json",
+    "strip_path": true
   }]
 }
