@@ -1,8 +1,8 @@
 variable "token" {}
+variable "image_id" {}
 
 provider "digitalocean" {
     token = "${var.token}"
-    image_id = "${var.image_id}"
 }
 
 # Create a new droplet
