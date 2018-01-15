@@ -12,7 +12,7 @@
   }],
   "post-processors": [{
     "type": "manifest",
-    "output": "infrastructure/manifest.json",
+    "output": "packer-manifest.json",
     "strip_path": true
   }]
 }
