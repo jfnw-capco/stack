@@ -8,7 +8,7 @@ provider "digitalocean" {
 # Create a new droplet
 resource "digitalocean_droplet" "terraform" {
     image  = "${var.image_id}"
-    name   = "terrform-droplet"
-    region = "lon3"
+    name   = "io-delineate-node-${var.image_id}"
+    region = "lon1"
     size   = "512mb"
 }
