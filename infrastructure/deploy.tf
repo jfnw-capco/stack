@@ -9,6 +9,6 @@ provider "digitalocean" {
 resource "digitalocean_droplet" "terraform" {
     image  = "${var.image_id}"
     name   = "terrform-droplet"
-    region = "nyc3"
+    region = "lon3"
     size   = "512mb"
 }
