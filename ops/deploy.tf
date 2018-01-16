@@ -1,5 +1,6 @@
 variable "token" {}
 variable "node_image_id" {}
+variable "short_branch" {}
 
 provider "digitalocean" {
     token = "${var.token}"
@@ -8,7 +9,7 @@ provider "digitalocean" {
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
     image  = "${var.node_image_id}"
-    name   = "io-delineate-node-${var.node_image_id}"
+    name   = "io-delineate-node-${var.short_branch}-${count.index}"
     region = "lon1"
     size   = "512mb"
 }
