@@ -10,7 +10,7 @@
     "region": "lon1",
     "size": "512mb",
     "droplet_name": "io-delineate-node-{{user `short_branch`}}",
-    "snapshot_name": "io-delineate-node-{{timestamp}}",
+    "snapshot_name": "io-delineate-node-{{user `short_branch`}}",
     "ssh_username": "root"
   }],
   "post-processors": [{
