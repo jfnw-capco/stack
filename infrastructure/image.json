@@ -12,7 +12,7 @@
   }],
   "post-processors": [{
     "type": "manifest",
-    "output": "image-manifest.json",
+    "output": "node_manifest.json",
     "strip_path": true
   }]
 }
