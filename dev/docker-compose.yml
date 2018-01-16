@@ -1,0 +1,8 @@
+version: '3'
+services:
+    web:
+        image: server-api
+        build: ./app
+        container_name: api
+        ports:
+            - 8080

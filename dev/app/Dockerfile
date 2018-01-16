@@ -1,19 +1,19 @@
-FROM node:carbon
+FROM node:boron
 
-# Create app directory
-WORKDIR /usr/src/app
+# Copies in the files 
+    COPY src /usr/app
+    WORKDIR /usr/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
 
-RUN npm install
-# If you are building your code for production
-# RUN npm install --only=production
+# Installs the apps dependencies 
+    RUN npm install
+    RUN npm install express --save
+    RUN npm install body-parser --save
+    
 
-# Bundle app source
-COPY . .
+# Expose the port
+    EXPOSE 8080
 
-EXPOSE 8080
-CMD [ "npm", "start" ]ls
+
+# Cmd to be run
+    CMD [ "npm", "start" ]
