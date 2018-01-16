@@ -1,8 +1,24 @@
-version: '3'
+version: '2'
 services:
-    web:
+
+    api-rp:
+        image: server-api-rp
+        container_name: server_api-rp
+        build: ./rp
+        command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+        ports:
+            - "80:80"
+            - "8080:8080"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /dev/null:/traefik.toml
+
+    api-app:
         image: server-api
         build: ./app
-        container_name: api
         ports:
-            - 8080
+            - 80
+        labels:
+            - "traefik.backend=api"
+            - "traefik.frontend.rule=Host:api.delineate.io"

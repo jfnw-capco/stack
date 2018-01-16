@@ -1,7 +1,7 @@
 FROM node:boron
 
 # Copies in the files 
-    COPY src /usr/app
+    COPY /src /usr/app
     WORKDIR /usr/app
 
 
