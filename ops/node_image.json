@@ -1,5 +1,6 @@
 {
   "variables": {
+    "short_branch": "",
     "do_api_token": "{{env `DIGITALOCEAN_ACCESS_TOKEN`}}"
   },
   "builders": [{
@@ -8,7 +9,7 @@
     "image": "ubuntu-16-04-x64",
     "region": "lon1",
     "size": "512mb",
-    "droplet_name": "io-delineate-node",
+    "droplet_name": "io-delineate-node-{{user `short_branch`}}",
     "snapshot_name": "io-delineate-node-{{timestamp}}",
     "ssh_username": "root"
   }],
