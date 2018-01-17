@@ -17,7 +17,7 @@
     {
       "type": "file",
       "source": "install_docker.sh",
-      "destination": "/tmp/install_docker.sh"
+      "destination": "/tmp/"
     },
     {
       "type": "shell",
