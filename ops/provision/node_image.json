@@ -13,6 +13,16 @@
     "snapshot_name": "io-delineate-node-{{user `short_branch`}}",
     "ssh_username": "root"
   }],
+  "provisioners":  [
+    {
+      "type": "file",
+      "source": "./install_docker.sh",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "script": "/tmp/install_docker.sh"
+    }],
   "post-processors": [{
     "type": "manifest",
     "output": "node_manifest.json",
