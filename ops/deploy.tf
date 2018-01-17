@@ -6,6 +6,7 @@ provider "digitalocean" {
     token = "${var.token}"
 }
 
+
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
     image  = "${var.node_image_id}"
@@ -13,4 +14,35 @@ resource "digitalocean_droplet" "node" {
     region = "lon1"
     size   = "1gb"
     ssh_keys = [17505046]
+}
+
+
+# Creates the load balancer
+resource "digitalocean_loadbalancer" "public" {
+  name = "io-delineate-lb"
+  region = "lon1"
+
+  forwarding_rule {
+    entry_port = 80
+    entry_protocol = "http"
+
+    target_port = 80
+    target_protocol = "http"
+  }
+
+  healthcheck {
+    port = 22
+    protocol = "tcp"
+  }
+
+  droplet_ids = ["${digitalocean_droplet.node.id}"]
+}
+
+
+# Add a record to the domain
+resource "digitalocean_record" "foobar" {
+  domain = "delineate.io"
+  type   = "A"
+  name   = "foobar"
+  value  = "${digitalocean_droplet.io-delineate-lb.id}"
 }
