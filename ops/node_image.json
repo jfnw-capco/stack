@@ -18,10 +18,6 @@
       "type": "file",
       "source": "install_docker.sh",
       "destination": "/tmp/"
-    },
-    {
-      "type": "shell",
-      "script": "/tmp/install_docker.sh"
     }],
   "post-processors": [{
     "type": "manifest",
