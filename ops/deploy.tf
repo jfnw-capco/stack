@@ -11,6 +11,6 @@ resource "digitalocean_droplet" "node" {
     image  = "${var.node_image_id}"
     name   = "io-delineate-node-${var.short_branch}-${count.index + 1}"
     region = "lon1"
-    size   = "512mb"
+    size   = "1gb"
     ssh_keys = [17505046]
 }
