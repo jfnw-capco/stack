@@ -1,5 +1,5 @@
 # Commands
 
-docker-compose -p "server" up --scale api-app=3 -d
+docker-compose -p "api" up --scale api-app=3 -d
 
 curl -H Host:api.example.com http://localhost:80
