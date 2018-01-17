@@ -22,7 +22,18 @@
         "sudo apt-get update",
         "sudo apt-get install -y docker-ce"
       ]
-    }],
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mkdir /app",
+      ]},
+    {
+      "type": "file",
+      "source": "../dev/",
+      "destination": "/app"
+    }  
+  ],
   "post-processors": [{
     "type": "manifest",
     "output": "node_manifest.json",
