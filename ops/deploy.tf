@@ -40,9 +40,10 @@ resource "digitalocean_loadbalancer" "lb" {
 
 
 # Add a record to the domain
-resource "digitalocean_record" "foobar" {
+resource "digitalocean_record" "record" {
   domain = "delineate.io"
   type   = "A"
-  name   = "foobar"
-  value  = "${digitalocean_loadbalancer.lb.id}"
+  name   = "api"
+  value  = "${digitalocean_loadbalancer.lb.ip}"
+  ttl = 1800      
 }
