@@ -44,5 +44,5 @@ resource "digitalocean_record" "foobar" {
   domain = "delineate.io"
   type   = "A"
   name   = "foobar"
-  value  = "${digitalocean_loadbalancer.lb.id}"
+  value  = "${digitalocean_loadbalancer.lb.ip}"
 }
