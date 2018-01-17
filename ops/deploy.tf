@@ -18,7 +18,7 @@ resource "digitalocean_droplet" "node" {
 
 
 # Creates the load balancer
-resource "digitalocean_loadbalancer" "public" {
+resource "digitalocean_loadbalancer" "lb" {
   name = "io-delineate-lb"
   region = "lon1"
 
@@ -44,5 +44,5 @@ resource "digitalocean_record" "foobar" {
   domain = "delineate.io"
   type   = "A"
   name   = "foobar"
-  value  = "${digitalocean_droplet.io-delineate-lb.id}"
+  value  = "${digitalocean_loadbalancer.lb.id}"
 }
