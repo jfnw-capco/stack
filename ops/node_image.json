@@ -16,8 +16,8 @@
   "provisioners":  [
     {
       "type": "file",
-      "source": "./install_docker.sh",
-      "destination": "/tmp"
+      "source": "install_docker.sh",
+      "destination": "/tmp/install_docker.sh"
     },
     {
       "type": "shell",
