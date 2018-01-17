@@ -1,9 +1,9 @@
 version: '3'
 services:
 
-    api-rp:
-        image: server-api-rp
-        container_name: server_api-rp
+    rp:
+        image: api-rp
+        container_name: api_rp
         build: ./rp
         command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
         ports:
@@ -14,8 +14,8 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             - /dev/null:/traefik.toml
 
-    api-app:
-        image: server-api
+    app:
+        image: api-app
         build: ./app
         ports:
             - 80
