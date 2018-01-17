@@ -26,13 +26,20 @@
     {
       "type": "shell",
       "inline": [
-        "sudo mkdir /app",
+        "sudo mkdir /app"
       ]},
     {
       "type": "file",
       "source": "../dev/",
       "destination": "/app"
-    }  
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /app",
+        "docker-compose -p \"api\" up --scale api-app=3 -d"
+      ]
+    }
   ],
   "post-processors": [{
     "type": "manifest",
