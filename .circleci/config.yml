@@ -10,8 +10,7 @@ jobs:
       - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       - run: pwd
-      - run: bash cd /
-      - run: pwd
+      - run: tree
       - run: bash cd ops/provision
       - run: bash ./provision.sh
       - run: bash cd /ops/provision
