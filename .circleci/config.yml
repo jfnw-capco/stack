@@ -5,7 +5,7 @@ jobs:
       - image: circleci/python:latest
 
     pre: 
-      - run: apt-get install -y tree
+      - run: sudo apt-get install -y tree
 
     steps:
       - checkout
