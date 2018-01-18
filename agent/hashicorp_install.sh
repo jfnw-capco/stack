@@ -12,4 +12,4 @@
     wget -q $URL
     unzip $FILE
     sudo mv $PACKAGE /usr/bin
-    /usr/bin/$PACKAGE
+    /usr/bin/$PACKAGE --version
