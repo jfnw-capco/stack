@@ -6,4 +6,5 @@ jobs:
 
     steps:
       - checkout
+      - run: echo $PATH
       - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
