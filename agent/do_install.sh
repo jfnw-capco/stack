@@ -10,4 +10,4 @@
     cd /tmp
     wget -q $URL
     tar xf ${FILE}
-    mv doctl /usr/local/bin
+    sudo mv doctl /usr/bin
