@@ -13,12 +13,7 @@ resource "digitalocean_droplet" "node" {
     name   = "io-delineate-node-${var.short_branch}-${count.index + 1}"
     region = "lon1"
     size   = "1gb"
-    ssh_keys = [17505046]    
-    provisioner "remote-exec" {
-        inline = [
-          "chmod +x /app/startup.sh",
-          "/app/startup.sh",
-        ]
+    ssh_keys = [17505046]
   }
 }
 
