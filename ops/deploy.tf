@@ -17,7 +17,7 @@ resource "digitalocean_droplet" "node" {
     provisioner "remote-exec" {
         inline = [
           "chmod +x /app/startup.sh",
-          "/app/startup.sh"
+          "/app/startup.sh",
         ]
   }
 }
