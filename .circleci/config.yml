@@ -7,4 +7,5 @@ jobs:
     steps:
       - checkout
       - run: echo "hello world"
+      - run: ls
       - run: bash ./hashicorp_install.sh "packer" "1.1.3"
