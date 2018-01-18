@@ -11,4 +11,4 @@
     cd /tmp
     wget -q $URL
     unzip $FILE
-    mv $PACKAGE /usr/local/bin
+    mv $PACKAGE /usr/bin
