@@ -9,7 +9,7 @@ jobs:
       - run: bash ./agent/do_install.sh "1.7.1"
       - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: bash cd /ops/provision
+      - run: bash cd ops/provision
       - run: bash ./provision.sh
       - run: bash cd /ops/provision
       - run: bash ./deploy.sh
