@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker-compose -p "api" up --scale app=3 -d
