@@ -14,12 +14,11 @@ resource "digitalocean_droplet" "node" {
     region = "lon1"
     size   = "1gb"
     ssh_keys = [17505046]
-}
-
-# Starts up the containers
-provisioner "local-exec" {
-    command = "/app/startup.sh"
+    # Starts up the containers
+    provisioner "local-exec" {
+      command = "/app/startup.sh"
   }
+}
 
 
 # Creates the load balancer
