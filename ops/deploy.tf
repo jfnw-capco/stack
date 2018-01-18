@@ -45,5 +45,4 @@ resource "digitalocean_record" "record" {
   type   = "A"
   name   = "api"
   value  = "${digitalocean_loadbalancer.lb.ip}"
-  ttl = 1800      
 }
