@@ -3,9 +3,8 @@ jobs:
   build:
     docker:
       - image: circleci/python:latest
-    pre:
-      - bash ./hashicorp_install.sh "packer" "1.1.3"
 
     steps:
       - checkout
       - run: echo "hello world"
+      - run: bash ./hashicorp_install.sh "packer" "1.1.3"
