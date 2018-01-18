@@ -38,6 +38,11 @@
     {
       "type": "shell",
       "inline": [
+        "sudo chmod +x /app/startup.sh"
+      ]},
+    { 
+      "type": "shell",
+      "inline": [
         "cd /app",
         "docker-compose -p \"api\" up --scale api-app=3 -d"
       ]

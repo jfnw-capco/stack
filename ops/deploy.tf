@@ -16,6 +16,11 @@ resource "digitalocean_droplet" "node" {
     ssh_keys = [17505046]
 }
 
+# Starts up the containers
+provisioner "local-exec" {
+    command = "/app/startup.sh"
+  }
+
 
 # Creates the load balancer
 resource "digitalocean_loadbalancer" "lb" {
@@ -46,3 +51,4 @@ resource "digitalocean_record" "api" {
   name   = "api"
   value  = "${digitalocean_loadbalancer.lb.ip}"
 }
+
