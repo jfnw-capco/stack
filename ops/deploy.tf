@@ -19,7 +19,6 @@ resource "digitalocean_droplet" "node" {
           "chmod +x /app/startup.sh",
           "/app/startup.sh"
         ]
-      }
   }
 }
 
