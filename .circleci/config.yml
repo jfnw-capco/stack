@@ -6,13 +6,13 @@ jobs:
 
     steps:
       - checkout
-      # - run: mkdir -p state
-      # - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
-      # - run: cd ops/provision && ./provision.sh
-      #- run: echo ./ops/provision/get_image_id.sh ./ops/provision/node_manifest.json >> /state/image_id.txt
-      run: echo "31049990" >> /state/image_id.txt
+      - run: mkdir -p /state
+      - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
+      - run: cd ops/provision && ./provision.sh
+      - run: echo ./ops/provision/get_image_id.sh ./ops/provision/node_manifest.json >> /state/image_id.txt
+      - run: 31049990 >> /state/image_id.txt
       - persist_to_workspace:
-          root: state
+          root: /state
           paths:
             - image_id.txt
           
@@ -23,19 +23,19 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      run: cat /state/image_id.txt
-      # - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      # - run: cd ops/deploy && ./deploy.sh $(cat ./state/image_id.txt)
+      - run: cat /state/image_id.txt
+      - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: cd ops/deploy && ./deploy.sh $(cat /state/image_id.txt)
       
-  # destroy:
-  #  docker:
-  #    - image: circleci/python:latest
-  #  steps:
-  #    - checkout
-  #    - attach_workspace:
-  #        at: state
-  #    - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-  #    - run: cd ops/destroy && ./destroy.sh $(cat /state/image_id.txt)
+  destroy:
+    docker:
+      - image: circleci/python:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: state
+      - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: cd ops/destroy && ./destroy.sh $(cat /state/image_id.txt)
 
 
 workflows:
@@ -46,6 +46,6 @@ workflows:
       - deploy:
           requires:
             - provision
-      # - destroy:
-      #    requires:
-      #      - deploy
+      - destroy:
+          requires:
+            - deploy
