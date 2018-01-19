@@ -66,18 +66,22 @@ resource "digitalocean_firewall" "web" {
     {
       protocol           = "tcp"
       port_range         = "80"
-      source_addresses   = ["0.0.0.0/0", "::/0"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.ip}"]
+    },
+    {
+      protocol           = "tcp"
+      port_range         = "22"
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.ip}"]
     }
   ]
   outbound_rule = [
     {
       protocol                = "tcp"
-      port_range              = "53"
+      port_range              = "80"
       destination_addresses   = ["0.0.0.0/0", "::/0"]
     },
     {
-      protocol                = "udp"
-      port_range              = "53"
+      protocol                = "icmp"
       destination_addresses   = ["0.0.0.0/0", "::/0"]
     }
   ]
