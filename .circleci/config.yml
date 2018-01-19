@@ -28,7 +28,7 @@ jobs:
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       - run: echo $(cat state/echo.txt)
 
-  #destroy:
+  destroy:
     docker:
       - image: circleci/python:latest
     steps:
