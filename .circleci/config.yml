@@ -23,8 +23,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
+      - run: echo "$(cat state/image_id.txt)""
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: ops/deploy/deploy.sh $(cat state/image_id.txt)
+      - run: ops/deploy/deploy.sh "$(cat state/image_id.txt)""
       
   destroy:
     docker:
