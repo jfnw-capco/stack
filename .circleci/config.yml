@@ -40,6 +40,7 @@ jobs:
       - attach_workspace:
           at: state
       - run: bash agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: bash agent/do_install.sh "1.7.1"
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
       - run: bash ops/deploy/destroy.sh "$(cat state/image_id.txt)"
 

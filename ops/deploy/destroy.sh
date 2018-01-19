@@ -17,3 +17,6 @@
 
 # Performs the destroy 
     terraform apply "terraform.plan"
+
+# Additional remove the image from DO
+    doctl compute image delete $1 --access-token ${DO_TOKEN} --force
