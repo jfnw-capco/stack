@@ -17,7 +17,7 @@ provider "digitalocean" {
 
 # Creates a tag for the branch 
 resource "digitalocean_tag" "branch_tag" {
-  name = "{var.branch}"
+  name = "${var.branch}"
 }
 
 # Create a new droplet
