@@ -19,7 +19,7 @@ provider "digitalocean" {
 resource "digitalocean_droplet" "node" {
     image  = "${var.image_id}"
     count  = "${var.node_count}"
-    name   = "${var.namespace}.${var.app}.${var.branch}.${count.index + 1}"
+    name   = "${var.namespace}-${var.app}-${var.branch}-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
     ssh_keys = "${var.node_keys}"
@@ -33,7 +33,7 @@ EOF
 
 # Creates the load balancer
 resource "digitalocean_loadbalancer" "lb" {
-  name = "${var.namespace}.${var.app}.${var.branch}.lb"
+  name = "${var.namespace}-${var.app}-${var.branch}-lb"
   region = "${var.region}"
 
   forwarding_rule {

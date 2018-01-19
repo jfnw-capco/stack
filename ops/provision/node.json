@@ -9,8 +9,8 @@
     "image": "docker-16-04",
     "region": "lon1",
     "size": "1gb",
-    "droplet_name": "io.delineate.api.{{user `branch`}}",
-    "snapshot_name": "io.delineate.api.{{user `branch`}}",
+    "droplet_name": "io-delineate-api-{{user `branch`}}",
+    "snapshot_name": "io-delineate-api-{{user `branch`}}",
     "ssh_username": "root"
   }],
   "provisioners":  [
