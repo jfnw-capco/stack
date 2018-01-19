@@ -1,11 +1,8 @@
 version: 2
 jobs:
-  build:
+  provision:
     docker:
       - image: circleci/python:latest
-
-    pre: 
-      - run: sudo apt-get install -y tree
 
     steps:
       - checkout
@@ -15,3 +12,40 @@ jobs:
       - run: cd ops/provision && ./provision.sh
       - run: cd ops/deploy && ./deploy.sh
       - run: cd ops/destroy && ./destroy.sh
+  
+  deploy:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "A first hello"
+
+  build:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "A first hello"  
+
+  destroy:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "A first hello"  
+
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - provision
+      - deploy
+          requires:
+            - provision
+      - build
+          requires:
+            - deploy
+      - destroy
+          requires:
+            - build
