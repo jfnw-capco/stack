@@ -9,9 +9,8 @@ jobs:
       # - run: bash ./agent/do_install.sh "1.7.1"
       - run: mkdir -p state
       - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
-      - run: echo "Trying out workspaces" >> state/echo.txt
-      # - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      # - run: cd ops/provision && ./provision.sh
+      - run: cd ops/provision && ./provision.sh
+      - run: echo $(ops/provision/get_image_id.sh) >> state/echo.txt
       # - run: cd ops/deploy && ./deploy.sh
       # - run: cd ops/destroy && ./destroy.sh
       - persist_to_workspace:
