@@ -10,7 +10,7 @@ jobs:
       - run: mkdir -p state
       - run: bash ./agent/hashicorp_install.sh "packer" "1.1.3"
       - run: cd ops/provision && ./provision.sh
-      - run: echo cd ops/provision && $(get_image_id.sh ./node_manifest.json) >> state/image_id.txt
+      - run: echo ./ops/provision/get_image_id.sh ./ops/provision/node_manifest.json) >> state/image_id.txt
       # - run: cd ops/deploy && ./deploy.sh
       # - run: cd ops/destroy && ./destroy.sh
       - persist_to_workspace:
@@ -43,6 +43,4 @@ workflows:
     jobs:
       - provision
       - deploy
-          requires:
-            - provision
       - destroy
