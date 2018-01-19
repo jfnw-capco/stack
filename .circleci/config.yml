@@ -7,10 +7,10 @@ jobs:
     steps:
       - checkout
       - run: mkdir -p state
-      # - run: agent/hashicorp_install.sh "packer" "1.1.3"
+      # - run: bash agent/hashicorp_install.sh "packer" "1.1.3"
       # - run: cd ops/provision && ./provision.sh
       - run: bash ops/provision/get_image_id.sh
-      - run: ${IMAGE_ID} >> state/image_id.txt
+      - run: mv ops/provision/image_id.txt state/image_id.txt
       - persist_to_workspace:
           root: state
           paths:
@@ -24,8 +24,8 @@ jobs:
       - attach_workspace:
           at: state
       - run: echo "$(cat state/image_id.txt)"
-      - run: agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: ops/deploy/deploy.sh "$(cat state/image_id.txt)"
+      - run: bash agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: bash ops/deploy/deploy.sh "$(cat state/image_id.txt)"
       
   destroy:
     docker:
@@ -34,8 +34,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: ops/deploy/destroy.sh "$(cat state/image_id.txt)"
+      - run: bash agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: bash ops/deploy/destroy.sh "$(cat state/image_id.txt)"
 
 
 workflows:
