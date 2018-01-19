@@ -62,7 +62,6 @@ resource "digitalocean_loadbalancer" "lb" {
 resource "digitalocean_firewall" "web" {
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
   name = "${var.namespace}-${var.app}-${var.branch}-fw"
-  source_addresses = "${digitalocean_loadbalancer.lb.ip}"
   inbound_rule = [
     {
       protocol           = "tcp"
