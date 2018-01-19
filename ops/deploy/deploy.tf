@@ -36,34 +36,6 @@ docker-compose -p "api" up --scale app=3 -d
 EOF
 }
 
-resource "digitalocean_firewall" "web" {
-  name = "${var.namespace}-${var.app}-${var.branch}-fw"
-  droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-  inbound_rule = [
-    {
-      protocol           = "tcp"
-      port_range         = "80"
-      source_addresses   = ["0.0.0.0/0", "::/0"]
-    }
-  ]
-  outbound_rule = [
-    {
-      protocol                = "icmp"
-      port_range              = "0"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
-    },
-    {
-      protocol                = "tcp"
-      port_range              = "0"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
-    },
-    {
-      protocol                = "udp"
-      port_range              = "0"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
-    }
-  ]
-}
 
 # Creates the load balancer
 resource "digitalocean_loadbalancer" "lb" {
@@ -84,6 +56,32 @@ resource "digitalocean_loadbalancer" "lb" {
   }
 
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
+}
+
+
+resource "digitalocean_firewall" "web" {
+  droplet_ids = ["${digitalocean_droplet.node.*.id}"]
+  name = "${var.namespace}-${var.app}-${var.branch}-fw"
+  source_addresses = "${digitalocean_loadbalancer.lb.ip}"
+  inbound_rule = [
+    {
+      protocol           = "tcp"
+      port_range         = "80"
+      source_addresses   = ["0.0.0.0/0", "::/0"]
+    }
+  ]
+  outbound_rule = [
+    {
+      protocol                = "tcp"
+      port_range              = "53"
+      destination_addresses   = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                = "udp"
+      port_range              = "53"
+      destination_addresses   = ["0.0.0.0/0", "::/0"]
+    }
+  ]
 }
 
 
