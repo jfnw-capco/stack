@@ -1,5 +1,8 @@
 #!/bin/bash
-    
+
+# Ensures runs in the current directory 
+    cd $(dirname "$0")
+
 # initiatlises the directory
     terraform init
 
