@@ -44,5 +44,5 @@ workflows:
       - provision
       - deploy
           requires:
-              - provision
+            - provision
       - destroy
