@@ -7,7 +7,7 @@ jobs:
 
     steps:
       - checkout
-      - run: echo "Clean up here"
+      - run: echo "Clean placeholder  here"
 
   provision:
     docker:
@@ -16,7 +16,7 @@ jobs:
     steps:
       - checkout
       - run: mkdir -p state
-      - run: bash agent/hashicorp_install.sh "packer" "1.1.3"
+      - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
       - run: cd ops/provision && ./provision.sh
       - run: bash ops/provision/get_image_id.sh
       - run: mv ops/provision/image_id.txt state/image_id.txt
@@ -33,13 +33,18 @@ jobs:
       - attach_workspace:
           at: state
       - run: echo "$(cat state/image_id.txt)"
-      - run: bash agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/deploy/deploy.sh "$(cat state/image_id.txt)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
       - persist_to_workspace:
           root: state
           paths:
             - terraform.tfstate
+
+  test:
+    steps:
+      - checkout
+      - run: echo "Tests placeholder here"
 
   destroy:
     docker:
@@ -48,8 +53,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: bash agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: bash agent/do_install.sh "1.7.1"
+      - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
+      - run: bash ops/scripts/do_install.sh "1.7.1"
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
       - run: bash ops/deploy/destroy.sh "$(cat state/image_id.txt)"
 
@@ -68,6 +73,10 @@ workflows:
           type: approval
           requires:
            - deploy
+      -test:
+          requires:
+           - deploy
       - destroy:
           requires:
             - approval
+            - test
