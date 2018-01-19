@@ -23,6 +23,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
+      - run: ls
       - run: cat state/image_id.txt
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       - run: cd ops/deploy && ./deploy.sh $(cat state/image_id.txt)
