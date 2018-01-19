@@ -24,7 +24,7 @@ jobs:
       - attach_workspace:
           at: state
       - run: IMAGE_ID=$(cat state/image_id.txt)
-      - run: echo "Image Id = ${IMAGE_ID}""
+      - run: echo "Image Id = ${IMAGE_ID}"
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       - run: cd ops/deploy && ./deploy.sh ${IMAGE_ID}
       
