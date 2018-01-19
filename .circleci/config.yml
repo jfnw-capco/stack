@@ -40,16 +40,16 @@ jobs:
 
 workflows:
   version: 2
-  test:
+  pipeline:
     jobs:
       - provision
       - deploy:
           requires:
             - provision
-      - hold:
+      - approval:
           type: approval
           requires:
            - deploy
       - destroy:
           requires:
-            - hold
+            - approval
