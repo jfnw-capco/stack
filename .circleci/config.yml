@@ -18,21 +18,21 @@ jobs:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
-      - run: echo "A first hello"
+      - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
 
   build:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
-      - run: echo "A first hello"  
+      - run: echo "build the containers"  
 
   destroy:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
-      - run: echo "A first hello"  
+      - run: echo "destroy the test environment"  
 
 
 workflows:
@@ -41,11 +41,5 @@ workflows:
     jobs:
       - provision
       - deploy
-          requires:
-            - provision
       - build
-          requires:
-            - deploy
       - destroy
-          requires:
-            - build
