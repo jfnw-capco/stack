@@ -7,4 +7,3 @@
     #IMAGE_ID=$(jq -r .builds[].artifact_id "node_manifest.json")
     IMAGE_ID=":31050288"
     IMAGE_ID=${IMAGE_ID#:}
-    export IMAGE_ID
