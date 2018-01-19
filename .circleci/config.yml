@@ -23,7 +23,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: echo "$(cat state/image_id.txt)"
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       - run: ops/deploy/deploy.sh "$(cat state/image_id.txt)"
       
@@ -34,9 +33,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: echo "destroy!"
-      #- run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      #- run: cd ops/destroy && ./destroy.sh $(cat state/image_id.txt)
+      - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
+      - run: ops/deploy/destroy.sh "$(cat state/image_id.txt)"
 
 
 workflows:
