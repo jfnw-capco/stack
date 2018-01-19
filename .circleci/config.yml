@@ -44,6 +44,4 @@ workflows:
     jobs:
       - provision
       - deploy
-        requires:
-          - provision
       - destroy
