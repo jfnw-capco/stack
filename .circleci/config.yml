@@ -28,13 +28,13 @@ jobs:
       - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       - run: echo $(cat state/echo.txt)
 
-  destroy:
-    docker:
-      - image: circleci/python:latest
-    steps:
-      - checkout
-      - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: echo "destroy the test environment"  
+  #destroy:
+  #  docker:
+  #    - image: circleci/python:latest
+  #  steps:
+  #    - checkout
+  #    - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
+  #    - run: echo "destroy the test environment"  
 
 
 workflows:
@@ -43,4 +43,6 @@ workflows:
     jobs:
       - provision
       - deploy
-      - destroy
+        requires:
+          - provision
+          #  - destroy
