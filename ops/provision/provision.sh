@@ -3,6 +3,11 @@
 # Ensures runs in the current directory 
     cd $(dirname "$0")
 
+# Ensures manifest will only hold  image id
+    if [ -f node_manifest.json ]; then
+        rm node_manifest.json -f
+    fi 
+
 # Gets the branch ID
     BRANCH=$(git rev-parse --short HEAD)
 
