@@ -16,4 +16,4 @@
     terraform plan -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" -destroy -out=terraform.plan -lock=true
 
 # Performs the destroy 
-    terraform destroy -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" -refresh=true -force -lock=true
+    terraform apply "terraform.plan"

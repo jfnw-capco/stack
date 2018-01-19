@@ -16,4 +16,4 @@
     terraform plan -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" -out=terraform.plan -lock=true
 
 # Performs the changes to the infrastructure
-    terraform apply -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" -auto-approve -lock=true
+    terraform apply "terraform.plan"

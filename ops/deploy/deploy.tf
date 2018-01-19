@@ -15,6 +15,11 @@ provider "digitalocean" {
     token = "${var.token}"
 }
 
+# Creates a tag for the branch 
+resource "digitalocean_tag" "branch_tag" {
+  name = "{var.branch}"
+}
+
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
     image  = "${var.image_id}"
@@ -22,6 +27,7 @@ resource "digitalocean_droplet" "node" {
     name   = "${var.namespace}-${var.app}-${var.branch}-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
+    tags   = ["${digitalocean_tag.branch_tag.id}"]
     ssh_keys = "${var.node_keys}"
     user_data = <<EOF
 #!/bin/bash
@@ -49,7 +55,7 @@ resource "digitalocean_loadbalancer" "lb" {
     protocol = "tcp"
   }
 
-  droplet_ids = ["${digitalocean_droplet.node.*.id}"]
+  droplet_tags = ["${digitalocean_droplet.branch_tag.id}"]
 }
 
 
