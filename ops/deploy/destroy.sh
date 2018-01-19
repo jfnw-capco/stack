@@ -4,7 +4,7 @@
     cd $(dirname "$0")
 
 # Gets the branch ID
-    BRANCH = $(git rev-parse —short HEAD)
+    BRANCH=$(git rev-parse --short HEAD)
 
 # initiatlises the directory
     terraform init
