@@ -7,7 +7,7 @@ jobs:
 
     steps:
       - checkout
-      - run: echo "Clean placeholder  here"
+      - run: echo "Clean up here"
 
   provision:
     docker:
@@ -41,13 +41,6 @@ jobs:
           paths:
             - terraform.tfstate
 
-  test:
-    docker:
-      - image: circleci/python:latest
-    steps:
-      - checkout
-      - run: echo "Tests placeholder here"
-
   destroy:
     docker:
       - image: circleci/python:latest
@@ -75,10 +68,6 @@ workflows:
           type: approval
           requires:
            - deploy
-      -test:
-          requires:
-           - deploy
       - destroy:
           requires:
             - approval
-            - test
