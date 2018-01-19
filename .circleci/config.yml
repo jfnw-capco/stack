@@ -42,5 +42,9 @@ workflows:
   test:
     jobs:
       - provision
-      - deploy
-      - destroy
+      - deploy:
+          requires:
+            - provision
+      - destroy:
+          requires:
+            - deploy
