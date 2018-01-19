@@ -1,5 +1,14 @@
 version: 2
 jobs:
+
+  clean:
+    docker:
+      - image: circleci/python:latest
+
+    steps:
+      - checkout
+      - run: echo "Clean up here"
+
   provision:
     docker:
       - image: circleci/python:latest
@@ -49,10 +58,12 @@ workflows:
   version: 2
   pipeline:
     jobs:
+      - clean
       - provision
       - deploy:
           requires:
             - provision
+            - clean
       - approval:
           type: approval
           requires:
