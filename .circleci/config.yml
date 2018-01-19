@@ -27,15 +27,15 @@ jobs:
       # - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
       # - run: cd ops/deploy && ./deploy.sh $(cat ./state/image_id.txt)
       
-  destroy:
-    docker:
-      - image: circleci/python:latest
-    steps:
-      - checkout
-      - attach_workspace:
-          at: state
-      - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
-      - run: cd ops/destroy && ./destroy.sh $(cat /state/image_id.txt)
+  # destroy:
+  #  docker:
+  #    - image: circleci/python:latest
+  #  steps:
+  #    - checkout
+  #    - attach_workspace:
+  #        at: state
+  #    - run: bash ./agent/hashicorp_install.sh "terraform" "0.11.2"
+  #    - run: cd ops/destroy && ./destroy.sh $(cat /state/image_id.txt)
 
 
 workflows:
@@ -46,6 +46,6 @@ workflows:
       - deploy:
           requires:
             - provision
-      - destroy:
-          requires:
-            - deploy
+      # - destroy:
+      #    requires:
+      #      - deploy
