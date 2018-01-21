@@ -81,14 +81,6 @@ resource "digitalocean_firewall" "public" {
       protocol                  = "tcp"
       port_range                = "80"
       source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
-    },
-    {
-      protocol                  = "tcp"
-      source_addresses     = ["${digitalocean_droplet.master.id}"]
-    },
-    {
-      protocol                  = "udp"
-      source_addresses     = ["${digitalocean_droplet.master.id}"]
     }
   ]
   outbound_rule = [
@@ -99,48 +91,11 @@ resource "digitalocean_firewall" "public" {
     {
       protocol                  = "tcp"
       port_range                = "80"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
-    },
-    {
-      protocol                  = "tcp"
-      destination_addresses     = ["${digitalocean_droplet.master.id}"]
-    },
-    {
-      protocol                  = "udp"
-      destination_addresses     = ["${digitalocean_droplet.master.id}"]
+      destination_addresses     = ["0.0.0.0/0", "::/0"]
     }
   ]
 }
 
-
-resource "digitalocean_firewall" "master" {
-  droplet_ids = ["${digitalocean_droplet.master.id}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-swarm-fw"
-  inbound_rule = [
-    {
-      protocol                = "tcp"
-      source_addresses        = ["${digitalocean_droplet.node.*.id}"]
-    },
-    {
-      protocol                = "udp"
-      source_addresses        = ["${digitalocean_droplet.node.*.id}"]
-    }
-  ]
-  outbound_rule = [
-    {
-      protocol                = "icmp"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
-    },
-    {
-      protocol                = "tcp"
-      destination_addresses   = ["${digitalocean_droplet.node.*.id}"]
-    },
-    {
-      protocol                = "udp"
-      destination_droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-    }
-  ]
-}
 
 # Add a record to the domain
 resource "digitalocean_record" "api" {
