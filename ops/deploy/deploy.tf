@@ -58,7 +58,7 @@ resource "digitalocean_loadbalancer" "lb" {
     protocol = "tcp"
   }
 
-  droplet_tag = "${digitalocean_tag.branch_tag.name}"]
+  droplet_tag = "${digitalocean_tag.branch_tag.name}"
 }
 
 
