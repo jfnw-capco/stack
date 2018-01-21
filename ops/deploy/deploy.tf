@@ -16,9 +16,20 @@ provider "digitalocean" {
     token = "${var.token}"
 }
 
+
 # Creates a tag for the branch 
 resource "digitalocean_tag" "branch_tag" {
   name = "${var.branch}"
+}
+
+# Create a new droplet
+resource "digitalocean_droplet" "master" {
+    image  = "docker-16-04"
+    name   = "${var.namespace}-${var.app}-${var.branch}-master-${count.index + 1}"
+    region = "${var.region}"
+    size   = "${var.size}"
+    private_networking = true
+    ssh_keys = "${var.node_keys}"
 }
 
 # Create a new droplet
@@ -64,7 +75,7 @@ resource "digitalocean_loadbalancer" "lb" {
 
 resource "digitalocean_firewall" "web" {
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-fw"
+  name = "${var.namespace}-${var.app}-${var.branch}-web-fw"
   inbound_rule = [
     {
       protocol           = "tcp"
