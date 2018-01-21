@@ -1,16 +1,19 @@
 {
   "variables": {
     "do_token": "",
-    "branch": ""
+    "branch": "",
+    "region": "",
+    "namepace": "",
+    "app": ""
   },
   "builders": [{
     "type": "digitalocean",
     "api_token": "{{user `do_token`}}",
     "image": "docker-16-04",
-    "region": "lon1",
+    "region": "{{user `region`}}",
     "size": "1gb",
-    "droplet_name": "io-delineate-api-{{user `branch`}}",
-    "snapshot_name": "io-delineate-api-{{user `branch`}}",
+    "droplet_name": "{{user `namespace`}}-{{user `app`}}-{{user `branch`}}",
+    "snapshot_name": "{{user `namespace`}}-{{user `app`}}-{{user `branch`}}",
     "ssh_username": "root"
   }],
   "provisioners":  [
