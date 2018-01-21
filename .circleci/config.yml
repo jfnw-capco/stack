@@ -1,14 +1,6 @@
 version: 2
 jobs:
 
-  build_images:
-      docker:
-      - image: circleci/python:latest
-
-    steps:
-      - checkout
-      - run: echo "Build images on bock storage!"
-
   clean:
     docker:
       - image: circleci/python:latest
@@ -73,14 +65,12 @@ workflows:
   version: 2
   pipeline:
     jobs:
-      - build_images
       - clean
       - provision
       - deploy:
           requires:
             - provision
             - clean
-            - build_images
       - test:
           requires:
               - deploy
