@@ -15,4 +15,4 @@
     packer validate -var-file="node_var.json" -var "do_token=${DO_TOKEN}" -var "branch=${BRANCH}" node.json
 
 # Runs the build
-    packer build -var-file="node_var.json" -var "do_token=${DO_TOKEN}" -var "branch=${BRANCH}" -on-error=cleanup node.json node.json
+    packer build -var-file="node_var.json" -var "do_token=${DO_TOKEN}" -var "branch=${BRANCH}" -on-error="cleanup" node.json
