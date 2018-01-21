@@ -29,6 +29,7 @@ resource "digitalocean_droplet" "node" {
     region = "${var.region}"
     size   = "${var.size}"
     tags   = ["${digitalocean_tag.branch_tag.id}"]
+    private_networking = true
     ssh_keys = "${var.node_keys}"
     user_data = <<EOF
 #!/bin/bash
@@ -57,7 +58,7 @@ resource "digitalocean_loadbalancer" "lb" {
     protocol = "tcp"
   }
 
-  droplet_ids = ["${digitalocean_droplet.node.*.id}"]
+  droplet_tag = "${digitalocean_tag.branch_tag.name}"]
 }
 
 
