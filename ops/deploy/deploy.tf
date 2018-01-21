@@ -73,15 +73,10 @@ resource "digitalocean_loadbalancer" "lb" {
 }
 
 
-resource "digitalocean_firewall" "web" {
+resource "digitalocean_firewall" "public" {
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-web-fw"
+  name = "${var.namespace}-${var.app}-${var.branch}-public-fw"
   inbound_rule = [
-    {
-      protocol                  = "tcp"
-      port_range                = "22"
-      source_addresses          = ["0.0.0.0/0", "::/0"]
-    },
     {
       protocol                  = "tcp"
       port_range                = "80"
@@ -104,7 +99,7 @@ resource "digitalocean_firewall" "web" {
     {
       protocol                  = "tcp"
       port_range                = "80"
-      destination_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
+      destination_addresses   = ["0.0.0.0/0", "::/0"]
     },
     {
       protocol                  = "tcp"
@@ -122,11 +117,6 @@ resource "digitalocean_firewall" "master" {
   droplet_ids = ["${digitalocean_droplet.master.id}"]
   name = "${var.namespace}-${var.app}-${var.branch}-swarm-fw"
   inbound_rule = [
-    {
-      protocol                = "tcp"
-      port_range              = "22"
-      source_addresses        = ["0.0.0.0/0", "::/0"]
-    },
     {
       protocol                = "tcp"
       source_addresses        = ["${digitalocean_droplet.node.*.id}"]
