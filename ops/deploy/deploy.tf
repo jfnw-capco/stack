@@ -85,7 +85,7 @@ resource "digitalocean_firewall" "public" {
     {
       protocol                  = "tcp"
       port_range                = "22"
-      destination_addresses     = = ["0.0.0.0/0", "::/0"]
+      source_droplet_ids        = ["${digitalocean_droplet.node.*.id}"]
     }
   ]
   outbound_rule = [
