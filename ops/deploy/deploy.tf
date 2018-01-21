@@ -36,7 +36,7 @@ resource "digitalocean_droplet" "master" {
 resource "digitalocean_droplet" "node" {
     image  = "${var.image_id}"
     count  = "${var.node_count}"
-    name   = "${var.namespace}-${var.app}-${var.branch}-${count.index + 1}"
+    name   = "${var.namespace}-${var.app}-${var.branch}-node-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
     tags   = ["${digitalocean_tag.branch_tag.id}"]
@@ -78,29 +78,79 @@ resource "digitalocean_firewall" "web" {
   name = "${var.namespace}-${var.app}-${var.branch}-web-fw"
   inbound_rule = [
     {
-      protocol           = "tcp"
-      port_range         = "80"
+      protocol                  = "tcp"
+      port_range                = "22"
+      source_addresses          = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                  = "tcp"
+      port_range                = "80"
       source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
     },
     {
-      protocol           = "tcp"
-      port_range         = "22"
-      source_addresses = ["0.0.0.0/0", "::/0"]
+      protocol                  = "tcp"
+      destination_addresses     = ["${digitalocean_droplet.master.id}"]
+    },
+    {
+      protocol                  = "udp"
+      destination_addresses     = ["${digitalocean_droplet.master.id}"]
     }
   ]
   outbound_rule = [
     {
-      protocol                = "tcp"
-      port_range              = "80"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
+      protocol                  = "icmp"
+      destination_addresses     = ["0.0.0.0/0", "::/0"]
     },
     {
-      protocol                = "icmp"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
+      protocol                  = "tcp"
+      port_range                = "80"
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
+    },
+    {
+      protocol                  = "tcp"
+      destination_addresses     = ["${digitalocean_droplet.master.id}"]
+    },
+    {
+      protocol                  = "udp"
+      destination_addresses     = ["${digitalocean_droplet.master.id}"]
     }
   ]
 }
 
+
+resource "digitalocean_firewall" "master" {
+  droplet_ids = ["${digitalocean_droplet.master.id}"]
+  name = "${var.namespace}-${var.app}-${var.branch}-swarm-fw"
+  inbound_rule = [
+    {
+      protocol                = "tcp"
+      port_range              = "22"
+      source_addresses        = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                = "tcp"
+      source_addresses        = ["${digitalocean_droplet.node.*.id}"]
+    },
+    {
+      protocol                = "udp"
+      source_addresses        = ["${digitalocean_droplet.node.*.id}"]
+    }
+  ]
+  outbound_rule = [
+    {
+      protocol                = "icmp"
+      destination_addresses   = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                = "tcp"
+      destination_addresses   = ["${digitalocean_droplet.node.*.id}"]
+    },
+    {
+      protocol                = "udp"
+      destination_droplet_ids = ["${digitalocean_droplet.node.*.id}"]
+    }
+  ]
+}
 
 # Add a record to the domain
 resource "digitalocean_record" "api" {
