@@ -69,7 +69,7 @@ resource "digitalocean_loadbalancer" "lb" {
     protocol = "tcp"
   }
 
-  droplet_tag = "${digitalocean_tag.branch_tag.name}"
+  droplet_ids = ["${digitalocean_droplet.node.*.id}"]
 }
 
 
@@ -81,6 +81,11 @@ resource "digitalocean_firewall" "public" {
       protocol                  = "tcp"
       port_range                = "80"
       source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
+    },
+    {
+      protocol                  = "tcp"
+      port_range                = "22"
+      destination_addresses     = = ["0.0.0.0/0", "::/0"]
     }
   ]
   outbound_rule = [
