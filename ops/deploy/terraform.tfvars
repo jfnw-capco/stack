@@ -5,3 +5,4 @@ namespace = "io-delineate"
 domain = "delineate.io"
 node_count = 1
 node_keys = [17505046]
+lb_count = 1
