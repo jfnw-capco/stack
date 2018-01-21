@@ -39,7 +39,8 @@ EOF
 
 # Creates the load balancer
 resource "digitalocean_loadbalancer" "lb" {
-  name = "${var.namespace}-${var.app}-${var.branch}-lb"
+  name = "${var.namespace}-${var.app}-${var.branch}-lb-${count.index + 1}"
+  count  = "${var.lb_count}"
   region = "${var.region}"
 
   forwarding_rule {
@@ -66,12 +67,12 @@ resource "digitalocean_firewall" "web" {
     {
       protocol           = "tcp"
       port_range         = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.id}"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
     },
     {
       protocol           = "tcp"
       port_range         = "22"
-      source_load_balancer_uids = ["0.0.0.0/0", "::/0"]
+      source_addresses = ["0.0.0.0/0", "::/0"]
     }
   ]
   outbound_rule = [
@@ -93,5 +94,6 @@ resource "digitalocean_record" "api" {
   domain = "${var.domain}"
   type   = "A"
   name   = "${var.app}"
-  value  = "${digitalocean_loadbalancer.lb.ip}"
+  count  = "${var.lb_count}"
+  value  = "${digitalocean_loadbalancer.lb.${count.index}.ip}"
 }
