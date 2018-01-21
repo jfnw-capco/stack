@@ -89,11 +89,11 @@ resource "digitalocean_firewall" "web" {
     },
     {
       protocol                  = "tcp"
-      destination_addresses     = ["${digitalocean_droplet.master.id}"]
+      source_addresses     = ["${digitalocean_droplet.master.id}"]
     },
     {
       protocol                  = "udp"
-      destination_addresses     = ["${digitalocean_droplet.master.id}"]
+      source_addresses     = ["${digitalocean_droplet.master.id}"]
     }
   ]
   outbound_rule = [
@@ -104,7 +104,7 @@ resource "digitalocean_firewall" "web" {
     {
       protocol                  = "tcp"
       port_range                = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
+      destination_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
     },
     {
       protocol                  = "tcp"
