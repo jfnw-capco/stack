@@ -71,7 +71,7 @@ resource "digitalocean_firewall" "web" {
     {
       protocol           = "tcp"
       port_range         = "22"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.id}"]
+      source_load_balancer_uids = ["0.0.0.0/0", "::/0"]
     }
   ]
   outbound_rule = [
