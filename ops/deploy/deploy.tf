@@ -10,6 +10,7 @@ variable "node_count" {}
 variable "node_keys" {
   type = "list"
 }
+variable "lb_count" {}
 
 provider "digitalocean" {
     token = "${var.token}"
@@ -95,5 +96,5 @@ resource "digitalocean_record" "api" {
   type   = "A"
   name   = "${var.app}"
   count  = "${var.lb_count}"
-  value  = "${digitalocean_loadbalancer.lb.${count.index}.ip}"
+  value  = "${digitalocean_loadbalancer.lb.*.ip[count.index]}"
 }
