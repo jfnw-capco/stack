@@ -8,4 +8,9 @@
 
 # Writes the current image
     IMAGE_ID=$(jq -r .builds[].artifact_id "${2}/${2}_manifest.json")
-    echo ${IMAGE_ID#:} >> "${1}/${2}.id"
+
+# Changes to the state directory
+    cd ${1}
+    pwd
+    ls ${1}
+    echo ${IMAGE_ID#:} >> "${2}.id"
