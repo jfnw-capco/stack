@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Makes the directory
+    mkdir -p ${1}
+
 # Ensures runs in the current directory 
     cd $(dirname "$0")
 
