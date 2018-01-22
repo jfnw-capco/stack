@@ -107,14 +107,17 @@ resource "digitalocean_firewall" "public" {
   ]
 }
 
-resource "digitalocean_firewall" "swarm" {
-  droplet_ids = ["${concat(digitalocean_droplet.node.*.id, digitalocean_droplet.master.*.id)}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-swarm-fw"
+resource "digitalocean_firewall" "swarm_nodes" {
+  droplet_ids = ["${digitalocean_droplet.node.*.id}"]
+  name = "${var.namespace}-${var.app}-${var.branch}-swarm-node-fw"
   inbound_rule = [
     {
       protocol                  = "tcp"
-      port_range                = "22"
-      source_addresses          = ["0.0.0.0/0", "::/0"]
+      source_tags               = ["{digitalocean_tag.master_tag.name}"]
+    },
+    {
+      protocol                  = "udp"
+      source_tags               = ["${digitalocean_tag.master_tag.name}"]
     }
   ]
   outbound_rule = [
@@ -124,6 +127,7 @@ resource "digitalocean_firewall" "swarm" {
     }
   ]
 }
+
 
 # Add a record to the domain
 resource "digitalocean_record" "api" {
