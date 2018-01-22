@@ -53,9 +53,7 @@ resource "digitalocean_droplet" "node" {
     ssh_keys = "${var.node_keys}"
     user_data = <<EOF
 #!/bin/bash
-cd /app
-docker-compose -p "api" up --scale app=3 -d
-EOF
+./startup/startup.sh
 }
 
 

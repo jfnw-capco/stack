@@ -8,8 +8,8 @@
     ufw allow 4789/udp 
 
 # Refreshs the firewall
-    ufw reload
-    ufw enable
+    ufw --force reload
+    ufw --force enable
 
 # Restart Docker to be sure
     systemctl restart docker
