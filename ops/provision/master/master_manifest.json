@@ -1,0 +1,13 @@
+{
+  "builds": [
+    {
+      "name": "digitalocean",
+      "builder_type": "digitalocean",
+      "build_time": 1516618435,
+      "files": null,
+      "artifact_id": ":31131242",
+      "packer_run_uuid": "f8d53b6f-f935-633c-2f36-df3cb5571960"
+    }
+  ],
+  "last_run_uuid": "f8d53b6f-f935-633c-2f36-df3cb5571960"
+}

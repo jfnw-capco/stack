@@ -4,7 +4,8 @@
     "branch": "",
     "region": "",
     "namepace": "",
-    "app": ""
+    "app": "",
+    "image": ""
   },
   "builders": [{
     "type": "digitalocean",
@@ -12,8 +13,8 @@
     "image": "docker-16-04",
     "region": "{{user `region`}}",
     "size": "1gb",
-    "droplet_name": "{{user `namespace`}}-{{user `app`}}-{{user `branch`}}",
-    "snapshot_name": "{{user `namespace`}}-{{user `app`}}-{{user `branch`}}",
+    "droplet_name": "{{user `namespace`}}-{{user `app`}}-{{user `image`}}-{{user `branch`}}",
+    "snapshot_name": "{{user `namespace`}}-{{user `app`}}-{{user `image`}}-{{user `branch`}}",
     "ssh_username": "root"
   }],
   "provisioners":  [
@@ -26,18 +27,11 @@
       "type": "file",
       "source": "../../dev/",
       "destination": "/app"
-    },
-    { 
-      "type": "shell",
-      "inline": [
-        "cd /app",
-        "docker-compose -p \"api\" up --no-start"
-      ]
     }
   ],
   "post-processors": [{
     "type": "manifest",
-    "output": "node_manifest.json",
+    "output": "{{user `image`}}_manifest.json",
     "strip_path": true
   }]
 }
