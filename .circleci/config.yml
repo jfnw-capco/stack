@@ -72,7 +72,7 @@ jobs:
           root: state
           paths:
             - terraform.tfstate
-            - state/image_ids.txt
+            - image_ids.txt
 
 
   test:
@@ -89,6 +89,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
+      - run: echo $(cat state/image_ids.txt)
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/scripts/do_install.sh "1.7.1"
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
