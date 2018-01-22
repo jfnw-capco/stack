@@ -32,6 +32,8 @@ jobs:
     steps:
       - checkout
       - run: mkdir -p state
+      - run: apt-get install tree
+      - run: tree ${CIRCLE_WORKING_DIRECTORY}
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
       - run: cd ops/provision && ./provision.sh "master"
       - run: bash ops/provision/get_image_id.sh ${CIRCLE_WORKING_DIRECTORY}/state "master" 
