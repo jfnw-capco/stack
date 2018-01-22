@@ -117,22 +117,22 @@ resource "digitalocean_firewall" "swarm_nodes" {
     {
       protocol                  = "tcp"
       port_range                = "2376"
-      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+      source_tags               = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     },
     {
       protocol                  = "tcp"
       port_range                = "7946"
-      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+      source_tags               = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     },
     {
       protocol                  = "udp"
       port_range                = "7946"
-      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+      source_tags               = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     },
     {
       protocol                  = "udp"
       port_range                = "4789"
-      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+      source_tags               = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     }
   ]
   outbound_rule = [
