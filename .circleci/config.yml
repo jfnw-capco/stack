@@ -37,7 +37,7 @@ jobs:
       - persist_to_workspace:
           root: state
           paths:
-            - master.txt
+            - master.id
 
   provision_node:
     docker:
@@ -51,7 +51,7 @@ jobs:
       - persist_to_workspace:
           root: state
           paths:
-            - node.txt
+            - node.id
 
   deploy:
     docker:
@@ -60,9 +60,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: bash ops/provision/get_image_ids.sh ${CIRCLE_WORKING_DIRECTORY}/state
+      - run: bash ops/provision/get_image_ids.sh state
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
-      - run: bash ops/deploy/deploy.sh "$(cat state/image_ids.txt)"
+      - run: bash ops/deploy/deploy.sh "$(cat state/image_ids.id)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
       - persist_to_workspace:
           root: state
@@ -85,11 +85,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: echo $(cat state/image_ids.txt)
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/scripts/do_install.sh "1.7.1"
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
-      - run: bash ops/deploy/destroy.sh "$(cat state/image_ids.txt)"
+      - run: bash ops/deploy/destroy.sh "$(cat state/image_ids.id)"
 
 workflows:
   version: 2
