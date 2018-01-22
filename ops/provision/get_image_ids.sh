@@ -1,8 +1,7 @@
 #!/bin/bash
 
-cd state
+FILES=${1}/*.id
 
-FILES=./*.id
 OUTPUT="{"
 for f in $FILES
 do
@@ -14,4 +13,4 @@ do
 	OUTPUT="${OUTPUT}${WE##*/}=$(cat $f)"
 done
 
-echo "${OUTPUT}}" 
+echo "${OUTPUT}}" >>  ${1}/image_ids.txt
