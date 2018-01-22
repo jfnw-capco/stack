@@ -1,2 +1,4 @@
 .DS_Store
 *.plan
+ops/deploy/terraform.plan
+ops/provision/node_manifest.json
