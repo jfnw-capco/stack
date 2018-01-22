@@ -99,7 +99,7 @@ workflows:
       - build_images:
           requires:
             - clean
-            - validation
+            - validate
       - provision_master:
           requires:
             - clean
