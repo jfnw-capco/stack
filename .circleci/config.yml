@@ -31,11 +31,9 @@ jobs:
 
     steps:
       - checkout
-      - run: mkdir -p state
-      - run: cd state && pwd
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
       - run: cd ops/provision && ./provision.sh "master"
-      - run: bash ops/provision/get_image_id.sh ./state "master" 
+      - run: bash ops/provision/get_image_id.sh /home/circleci/project/state "master" 
       - persist_to_workspace:
           root: state
           paths:
@@ -47,10 +45,9 @@ jobs:
 
     steps:
       - checkout
-      - run: mkdir -p state
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
       - run: cd ops/provision && ./provision.sh "node"
-      - run: bash ops/provision/get_image_id.sh ./state "node" 
+      - run: bash ops/provision/get_image_id.sh /home/circleci/project/state "node" 
       - persist_to_workspace:
           root: state
           paths:
