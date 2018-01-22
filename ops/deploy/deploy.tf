@@ -22,10 +22,12 @@ resource "digitalocean_tag" "node_tag" {
   name = "node-${var.branch}"
 }
 
+
 # Creates a tag for the masters
 resource "digitalocean_tag" "master_tag" {
   name = "master-${var.branch}"
 }
+
 
 # Create a new droplet
 resource "digitalocean_droplet" "master" {
@@ -37,6 +39,7 @@ resource "digitalocean_droplet" "master" {
     private_networking = true
     ssh_keys = "${var.node_keys}"
 }
+
 
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
@@ -113,11 +116,23 @@ resource "digitalocean_firewall" "swarm_nodes" {
   inbound_rule = [
     {
       protocol                  = "tcp"
-      source_tags               = ["{digitalocean_tag.master_tag.name}"]
+      port_range                = "2376"
+      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+    },
+    {
+      protocol                  = "tcp"
+      port_range                = "7946"
+      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     },
     {
       protocol                  = "udp"
-      source_tags               = ["${digitalocean_tag.master_tag.name}"]
+      port_range                = "7946"
+      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+    },
+    {
+      protocol                  = "udp"
+      port_range                = "4789"
+      source_tags               = ["${concat(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     }
   ]
   outbound_rule = [
