@@ -10,13 +10,13 @@
     terraform init
 
 # Validates the plan    
-    terraform validate -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" 
+    terraform validate -var "token=${DO_TOKEN}" -var "image_ids=$1" -var "branch=${BRANCH}" 
 
 # Outputs the the plan
-    terraform plan -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" -destroy -out=terraform.plan -lock=true
+    terraform plan -var "token=${DO_TOKEN}" -var "image_ids=$1" -var "branch=${BRANCH}" -destroy -out=terraform.plan -lock=true
 
 # Performs the destroy 
     terraform apply "terraform.plan"
 
 # Additional remove the image from DO
-    doctl compute image delete $1 --access-token ${DO_TOKEN} --force
+    #  doctl compute image delete $1 --access-token ${DO_TOKEN} --force

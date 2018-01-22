@@ -5,4 +5,4 @@
 
 # Writes the current image
     IMAGE_ID=$(jq -r .builds[].artifact_id "${1}/${1}_manifest.json")
-    echo ${IMAGE_ID#:} >> "${1}/${1}_image_id.txt"
+    echo ${IMAGE_ID#:} >> "${1}.txt"

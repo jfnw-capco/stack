@@ -1,6 +1,9 @@
 variable "token" {}
 variable "branch" {}
-variable "image_id" {}
+variable "image_ids" 
+{
+   type = "map"
+}
 variable "region" {}
 variable "size" {}
 variable "app" {}
@@ -31,19 +34,23 @@ resource "digitalocean_tag" "master_tag" {
 
 # Create a new droplet
 resource "digitalocean_droplet" "master" {
-    image  = "docker-16-04"
+    image  = "${var.image_ids['master']}"
     name   = "${var.namespace}-${var.app}-${var.branch}-master-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
     tags   = ["${digitalocean_tag.master_tag.id}"]
     private_networking = true
     ssh_keys = "${var.node_keys}"
+    user_data = <<EOF
+#!/bin/bash
+./startup/startup.sh
+EOF
 }
 
 
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
-    image  = "${var.image_id}"
+    image  = "${var.image_ids['node']}"
     count  = "${var.node_count}"
     name   = "${var.namespace}-${var.app}-${var.branch}-node-${count.index + 1}"
     region = "${var.region}"
