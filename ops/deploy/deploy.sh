@@ -10,7 +10,7 @@
     terraform init
 
 # Validates the plan    
-    terraform validate -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" 
+    terraform validate -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}"
 
 # Outputs the the plan
     terraform plan -var "token=${DO_TOKEN}" -var "image_id=$1" -var "branch=${BRANCH}" -out=terraform.plan -lock=true

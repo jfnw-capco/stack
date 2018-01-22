@@ -108,7 +108,7 @@ resource "digitalocean_firewall" "public" {
 }
 
 resource "digitalocean_firewall" "swarm" {
-  droplet_ids = ["${digitalocean_droplet.node.*.id}, ${digitalocean_droplet.master.*.id}"]
+  droplet_ids = ["${concat(digitalocean_droplet.node.*.id, digitalocean_droplet.master.*.id)}"]
   name = "${var.namespace}-${var.app}-${var.branch}-swarm-fw"
   inbound_rule = [
     {
