@@ -7,7 +7,17 @@ jobs:
 
     steps:
       - checkout
-      - run: echo "Clean up here"
+      - run: echo "Clean up placeholder here"
+
+
+  build_images:
+    docker:
+      - image: circleci/python:latest
+
+    steps:
+      - checkout
+      - run: echo "Build images placeholder here"
+
 
   provision:
     docker:
@@ -24,7 +34,8 @@ jobs:
           root: state
           paths:
             - image_id.txt
-          
+
+
   deploy:
     docker:
       - image: circleci/python:latest
@@ -40,6 +51,7 @@ jobs:
           root: state
           paths:
             - terraform.tfstate
+
 
   test:
     docker:
@@ -66,11 +78,13 @@ workflows:
   pipeline:
     jobs:
       - clean
+      - build_images
       - provision
       - deploy:
           requires:
-            - provision
             - clean
+            - build_images
+            - provision
       - test:
           requires:
               - deploy

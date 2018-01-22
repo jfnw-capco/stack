@@ -17,9 +17,14 @@ provider "digitalocean" {
 }
 
 
-# Creates a tag for the branch 
-resource "digitalocean_tag" "branch_tag" {
-  name = "${var.branch}"
+# Creates a tag for the nodes 
+resource "digitalocean_tag" "node_tag" {
+  name = "node-${var.branch}"
+}
+
+# Creates a tag for the masters
+resource "digitalocean_tag" "master_tag" {
+  name = "master-${var.branch}"
 }
 
 # Create a new droplet
@@ -28,6 +33,7 @@ resource "digitalocean_droplet" "master" {
     name   = "${var.namespace}-${var.app}-${var.branch}-master-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
+    tags   = ["${digitalocean_tag.master_tag.id}"]
     private_networking = true
     ssh_keys = "${var.node_keys}"
 }
@@ -39,7 +45,7 @@ resource "digitalocean_droplet" "node" {
     name   = "${var.namespace}-${var.app}-${var.branch}-node-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
-    tags   = ["${digitalocean_tag.branch_tag.id}"]
+    tags   = ["${digitalocean_tag.node_tag.id}"]
     private_networking = true
     ssh_keys = "${var.node_keys}"
     user_data = <<EOF
@@ -51,8 +57,8 @@ EOF
 
 
 # Creates the load balancer
-resource "digitalocean_loadbalancer" "lb" {
-  name = "${var.namespace}-${var.app}-${var.branch}-lb-${count.index + 1}"
+resource "digitalocean_loadbalancer" "public" {
+  name = "${var.namespace}-${var.app}-${var.branch}-public-${count.index + 1}"
   count  = "${var.lb_count}"
   region = "${var.region}"
 
@@ -80,12 +86,12 @@ resource "digitalocean_firewall" "public" {
     {
       protocol                  = "tcp"
       port_range                = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.lb.*.id}"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.public.*.id}"]
     },
     {
       protocol                  = "tcp"
       port_range                = "22"
-      source_droplet_ids        = ["${digitalocean_droplet.node.*.id}"]
+      source_addresses          = ["0.0.0.0/0", "::/0"]
     }
   ]
   outbound_rule = [
@@ -101,6 +107,23 @@ resource "digitalocean_firewall" "public" {
   ]
 }
 
+resource "digitalocean_firewall" "swarm" {
+  droplet_ids = ["${digitalocean_droplet.node.*.id}, ${digitalocean_droplet.master.*.id"]
+  name = "${var.namespace}-${var.app}-${var.branch}-swarm-fw"
+  inbound_rule = [
+    {
+      protocol                  = "tcp"
+      port_range                = "22"
+      source_addresses          = ["0.0.0.0/0", "::/0"]
+    }
+  ]
+  outbound_rule = [
+    {
+      protocol                  = "icmp"
+      destination_addresses     = ["0.0.0.0/0", "::/0"]
+    }
+  ]
+}
 
 # Add a record to the domain
 resource "digitalocean_record" "api" {
@@ -108,5 +131,5 @@ resource "digitalocean_record" "api" {
   type   = "A"
   name   = "${var.app}"
   count  = "${var.lb_count}"
-  value  = "${digitalocean_loadbalancer.lb.*.ip[count.index]}"
+  value  = "${digitalocean_loadbalancer.public.*.ip[count.index]}"
 }
