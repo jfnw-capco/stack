@@ -25,7 +25,6 @@ jobs:
       - checkout
       - run: echo "Build images placeholder here"
 
-
   provision_master:
     docker:
       - image: circleci/python:latest
@@ -34,7 +33,6 @@ jobs:
       - checkout
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
       - run: cd ops/provision && ./provision.sh "master"
-
 
   provision_node:
     docker:
@@ -51,7 +49,6 @@ jobs:
           root: state
           paths:
             - node_image_id.txt
-
 
   deploy:
     docker:
@@ -88,7 +85,6 @@ jobs:
       - run: bash ops/scripts/do_install.sh "1.7.1"
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
       - run: bash ops/deploy/destroy.sh "$(cat state/image_id.txt)"
-
 
 workflows:
   version: 2

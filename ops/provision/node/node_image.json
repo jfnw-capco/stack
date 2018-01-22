@@ -27,11 +27,26 @@
       "type": "file",
       "source": "../../dev/",
       "destination": "/app"
-    }
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mkdir /startup"
+      ]},
+    {
+      "type": "file",
+      "source": "{{user `image`}}/{{user `image`}}_startup.sh",
+      "destination": "/startup/startup.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo chmod +x /startup/startup.sh"
+      ]}
   ],
   "post-processors": [{
     "type": "manifest",
-    "output": "{{user `image`}}_manifest.json",
+    "output": "{{user `image`}}/{{user `image`}}_manifest.json",
     "strip_path": true
   }]
 }
