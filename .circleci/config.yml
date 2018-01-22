@@ -103,11 +103,11 @@ workflows:
       - provision_master:
           requires:
             - clean
-            - validation
+            - validate
       - provision_node:
           requires:
             - clean
-            - validation
+            - validate
       - deploy:
           requires:
             - build_images
