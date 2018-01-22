@@ -10,6 +10,15 @@ jobs:
       - run: echo "Clean up placeholder here"
 
 
+  validation:
+    docker:
+      - image: circleci/python:latest
+
+    steps:
+      - checkout
+      - run: echo "Pure syntax validation"
+
+
   build_images:
     docker:
       - image: circleci/python:latest
@@ -19,7 +28,17 @@ jobs:
       - run: echo "Build images placeholder here"
 
 
-  provision:
+  provision_master:
+    docker:
+      - image: circleci/python:latest
+
+    steps:
+      - checkout
+      - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
+      - run: cd ops/provision && ./provision.sh "master"
+
+
+  provision_node:
     docker:
       - image: circleci/python:latest
 
@@ -27,13 +46,13 @@ jobs:
       - checkout
       - run: mkdir -p state
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
-      - run: cd ops/provision && ./provision.sh
-      - run: bash ops/provision/get_image_id.sh
-      - run: mv ops/provision/image_id.txt state/image_id.txt
+      - run: cd ops/provision && ./provision.sh "node"
+      - run: bash ops/provision/get_image_id.sh "node"
+      - run: mv ops/provision/node/node_image_id.txt state/node_image_id.txt
       - persist_to_workspace:
           root: state
           paths:
-            - image_id.txt
+            - node_image_id.txt
 
 
   deploy:
@@ -43,9 +62,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: echo "$(cat state/image_id.txt)"
+      - run: echo "$(cat state/node_image_id.txt)"
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
-      - run: bash ops/deploy/deploy.sh "$(cat state/image_id.txt)"
+      - run: bash ops/deploy/deploy.sh "$(cat state/node_image_id.txt)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
       - persist_to_workspace:
           root: state
@@ -78,22 +97,32 @@ workflows:
   pipeline:
     jobs:
       - clean
+      - validation
       - build_images
-      - provision
-      - deploy:
           requires:
             - clean
+            - validation
+      - provision_master
+          requires:
+            - clean
+            - validation
+      - provision_node
+          requires:
+            - clean
+            - validation
+      - deploy:
+          requires:
             - build_images
-            - provision
+            - provision_master
+            - provision_node
       - test:
           requires:
               - deploy
-      - approval:
+      - destroy_approval:
           type: approval
           requires:
-           - deploy
+           - test
       - destroy:
           requires:
-            - approval
-            - test
+            - destroy_approval
             
