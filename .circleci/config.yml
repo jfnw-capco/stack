@@ -64,7 +64,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: state
-      - run: echo "{master='$(cat state/master.txt)',node='$(cat state/node.txt)'}" >> state/image_ids.txt
+      - run: echo "{master=$(cat state/master.txt),node=$(cat state/node.txt)}" >> state/image_ids.txt
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/deploy/deploy.sh "$(cat state/image_ids.txt)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
