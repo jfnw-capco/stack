@@ -9,15 +9,13 @@ jobs:
       - checkout
       - run: echo "Clean up placeholder here"
 
-
-  validation:
+  validate:
     docker:
       - image: circleci/python:latest
 
     steps:
       - checkout
       - run: echo "Pure syntax validation"
-
 
   build_images:
     docker:
@@ -97,16 +95,16 @@ workflows:
   pipeline:
     jobs:
       - clean
-      - validation
-      - build_images
+      - validate
+      - build_images:
           requires:
             - clean
             - validation
-      - provision_master
+      - provision_master:
           requires:
             - clean
             - validation
-      - provision_node
+      - provision_node:
           requires:
             - clean
             - validation
