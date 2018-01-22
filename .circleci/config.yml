@@ -9,6 +9,7 @@ jobs:
       - checkout
       - run: echo "Clean up placeholder here"
       - run: printenv
+      - run: ls $CIRCLE_INTERNAL_SCRATCH
 
   validate:
     docker:
