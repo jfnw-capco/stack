@@ -54,6 +54,7 @@ resource "digitalocean_droplet" "node" {
     user_data = <<EOF
 #!/bin/bash
 ./startup/startup.sh
+EOF
 }
 
 
