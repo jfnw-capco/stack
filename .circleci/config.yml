@@ -88,7 +88,7 @@ jobs:
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/scripts/do_install.sh "1.7.1"
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
-      - run: bash ops/deploy/destroy.sh "$(cat state/image_ids.id)"
+      - run: bash ops/deploy/destroy.sh "$(cat state/image_ids.id)" /home/circleci/project/state
 
 workflows:
   version: 2

@@ -13,4 +13,4 @@ do
 	OUTPUT="${OUTPUT}${WE##*/}=$(cat $f)"
 done
 
-echo "${OUTPUT}}" >>  ${1}/image_ids.id
+echo "${OUTPUT}}" >>  ${1}/image.ids
