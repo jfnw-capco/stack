@@ -10,7 +10,8 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         labels:
             - "traefik.backend=mgt"
-            - "traefik.frontend.rule=Host:mgt.delineate.io"
+            - "traefik.frontend.rule=Host:management.delineate.io"
+
 
     rp: # Traefik Reverse Proxy 
         image: traefik
@@ -22,6 +23,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             - /dev/null:/traefik.toml
 
+
     app: # Python (Flask) application
         image: api-app
         build: ./app
@@ -30,6 +32,7 @@ services:
         labels:
             - "traefik.backend=api"
             - "traefik.frontend.rule=Host:api.delineate.io"
+
 
     db: # Redis Database
         image: redis:alpine

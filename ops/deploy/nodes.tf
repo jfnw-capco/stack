@@ -136,3 +136,13 @@ resource "digitalocean_record" "api" {
   count  = "${var.node_lb_count}"
   value  = "${digitalocean_loadbalancer.node_lb.*.ip[count.index]}"
 }
+
+
+# Add a record to the domain
+resource "digitalocean_record" "management" {
+  domain = "${var.domain}"
+  type   = "A"
+  name   = "management"
+  count  = "${var.node_lb_count}"
+  value  = "${digitalocean_loadbalancer.node_lb.*.ip[count.index]}"
+}
