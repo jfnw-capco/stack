@@ -1,34 +1,34 @@
 version: 2
 jobs:
 
-  clean:
+  validate_dev:
     docker:
       - image: circleci/python:latest
-
     steps:
       - checkout
-      - run: echo "Clean up placeholder here"
+      - run: bash dev/valdiate.sh
 
-  validate:
+
+  validate_ops:
     docker:
       - image: circleci/python:latest
-
     steps:
       - checkout
-      - run: echo "Pure syntax validation"
+      - run: bash ops/provision/validate.sh
+      - run: bash ops/deploy/validate.sh
 
-  build_images:
+
+  unit_tests:
     docker:
       - image: circleci/python:latest
-
     steps:
       - checkout
-      - run: echo "Build images placeholder here"
+      - run: echo "Runs the PyTest test cases"
 
-  provision_master:
+
+  provision_masters:
     docker:
       - image: circleci/python:latest
-
     steps:
       - checkout
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
@@ -39,10 +39,10 @@ jobs:
           paths:
             - master.id
 
-  provision_node:
+
+  provision_nodes:
     docker:
       - image: circleci/python:latest
-
     steps:
       - checkout
       - run: bash ops/scripts/hashicorp_install.sh "packer" "1.1.3"
@@ -52,6 +52,7 @@ jobs:
           root: state
           paths:
             - node.id
+
 
   deploy:
     docker:
@@ -71,12 +72,14 @@ jobs:
             - image_ids.id
 
 
-  test:
+  integration_test:
     docker:
       - image: circleci/python:latest
     steps:
       - checkout
-      - run: echo "testing here!"
+      - run: echo "Integrated Ops tests here"
+      - run: echo "Integrated Feature tests here"
+
 
   destroy:
     docker:
@@ -90,37 +93,34 @@ jobs:
       - run: mv state/terraform.tfstate ops/deploy/terraform.tfstate
       - run: bash ops/deploy/destroy.sh "$(cat state/image.ids)" /home/circleci/project/state
 
+
 workflows:
   version: 2
   pipeline:
     jobs:
-      - clean
-      - validate
-      - build_images:
+      - validate_dev
+      - validate_ops
+      - unit_tests:
           requires:
-            - clean
-            - validate
-      - provision_master:
+            - validate_dev
+      - provision_masters:
           requires:
-            - clean
-            - validate
-      - provision_node:
+            - validate_ops
+      - provision_nodes:
           requires:
-            - clean
-            - validate
+            - validate_ops
       - deploy:
           requires:
-            - build_images
-            - provision_master
-            - provision_node
-      - test:
+            - unit_tests
+            - provision_masters
+            - provision_nodes
+      - integration_tests:
           requires:
               - deploy
-      - destroy_approval:
+      - destroy_approval: 
           type: approval
           requires:
            - test
       - destroy:
           requires:
             - destroy_approval
-            

@@ -1,19 +1,6 @@
-FROM node:boron
+FROM python:3.4-alpine
 
-# Copies in the files 
-    COPY /src /usr/app
-    WORKDIR /usr/app
-
-
-# Installs the apps dependencies 
-    RUN npm install
-    RUN npm install express --save
-    RUN npm install body-parser --save
-    
-
-# Expose the port
-    EXPOSE 8080
-
-
-# Cmd to be run
-    CMD [ "npm", "start" ]
+ADD ./code /code
+WORKDIR /code
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]

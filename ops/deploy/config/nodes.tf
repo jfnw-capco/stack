@@ -66,8 +66,8 @@ EOF
 
 
 # Creates the load balancer
-resource "digitalocean_loadbalancer" "public" {
-  name = "${var.namespace}-${var.app}-${var.branch}-public-${count.index + 1}"
+resource "digitalocean_loadbalancer" "public_lb" {
+  name = "${var.namespace}-${var.app}-${var.branch}-public-lb-${count.index + 1}"
   count  = "${var.lb_count}"
   region = "${var.region}"
 
@@ -88,14 +88,14 @@ resource "digitalocean_loadbalancer" "public" {
 }
 
 
-resource "digitalocean_firewall" "public" {
+resource "digitalocean_firewall" "node_public" {
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-public-fw"
+  name = "${var.namespace}-${var.app}-${var.branch}-node-public-fw"
   inbound_rule = [
     {
       protocol                  = "tcp"
       port_range                = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.public.*.id}"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.public_lb.*.id}"]
     },
     {
       protocol                  = "tcp"
@@ -145,6 +145,26 @@ resource "digitalocean_firewall" "swarm_nodes" {
     {
       protocol                  = "icmp"
       destination_addresses     = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                  = "tcp"
+      port_range                = "2376"
+      destination_tags          = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+    },
+    {
+      protocol                  = "tcp"
+      port_range                = "7946"
+      destination_tags          = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+    },
+    {
+      protocol                  = "udp"
+      port_range                = "7946"
+      destination_tags          = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
+    },
+    {
+      protocol                  = "udp"
+      port_range                = "4789"
+      destination_tags          = ["${list(digitalocean_tag.master_tag.name, digitalocean_tag.node_tag.name)}"]
     }
   ]
 }
@@ -156,5 +176,5 @@ resource "digitalocean_record" "api" {
   type   = "A"
   name   = "${var.app}"
   count  = "${var.lb_count}"
-  value  = "${digitalocean_loadbalancer.public.*.ip[count.index]}"
+  value  = "${digitalocean_loadbalancer.public_lb.*.ip[count.index]}"
 }

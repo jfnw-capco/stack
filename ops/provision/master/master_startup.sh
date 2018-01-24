@@ -18,17 +18,15 @@
 # Create as the swarm master here 
     # docker swarm init --advertise-addr <MANAGER-IP>
 
-# This will return the token to use for workers
-    # docker swarm join-token worker
+# Return the token and IP address (needed by nodes)
+    # docker swarm join-token -q worker
+    # docker info --format "{{.Swarm.NodeAddr}}"
 
-# Create a docker registry in the swarm
-    # docker service create --name registry --publish published=5000,target=5000 registry:2
+# Create a resgistry mirror 
+    # See url saved to bear to reduce network traffic 
 
 # Docker compose can be stood up 
-    # TODO here
+    # TODO - This will download the images to the mirror, this resolves speed and security
 
-# In the directory where compose is
-    # docker-compose push
-
-# docker stack deploy --compose-file docker-compose.yml stackdemo
+# docker stack deploy --composeo -file docker-compose.yml stackdemo
     # Deploys across the swarm 
