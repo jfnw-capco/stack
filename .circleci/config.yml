@@ -25,10 +25,20 @@ jobs:
       - image: circleci/python:latest
     steps:
       - checkout
-      - run: echo "Runs the PyTest test cases"
+      - run: python --version
+      - run: pip --version
 
 
-  provision_masters:
+  build_docker_stack:
+    docker:
+      - image: circleci/python:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: cd dev && docker-compose build --force-rm --pull
+
+
+  provision_master_vm:
     docker:
       - image: circleci/python:latest
     steps:
@@ -42,7 +52,7 @@ jobs:
             - master.id
 
 
-  provision_nodes:
+  provision_node_vm:
     docker:
       - image: circleci/python:latest
     steps:
@@ -105,17 +115,20 @@ workflows:
       - unit_tests:
           requires:
             - validate_dev
-      - provision_masters:
+      - build_docker_stack:
+          requires:
+            - unit_tests
+      - provision_master_vm:
           requires:
             - validate_ops
-      - provision_nodes:
+      - provision_node_vm:
           requires:
             - validate_ops
       - deploy:
           requires:
-            - unit_tests
-            - provision_masters
-            - provision_nodes
+            - build_docker_stack
+            - provision_master_vm
+            - provision_node_vm
       - integration_tests:
           requires:
               - deploy
