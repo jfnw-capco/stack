@@ -9,7 +9,8 @@
     ufw allow 4789/udp
 
 # Docker registry port
-    ufw allow 5000/tcp
+    ufw allow 443/tcp
+    ufw allow 80/tcp
 
 # Refreshs the firewall
     ufw --force reload
@@ -18,8 +19,8 @@
 # Restart Docker to be sure
     systemctl restart docker
 
-# Create as the swarm master here 
-    # docker swarm init --advertise-addr <MANAGER-IP>
+# Creates a local registry for the images to be pushed into
+    docker run -d -p 80:5000 --restart=always --name registry registry:2
 
 # Return the token and IP address (needed by nodes)
     # docker swarm join-token -q worker

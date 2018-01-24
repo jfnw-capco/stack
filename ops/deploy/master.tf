@@ -24,7 +24,12 @@ resource "digitalocean_firewall" "master_public" {
   inbound_rule = [
     {
       protocol                  = "tcp"
-      port_range                = "5000"
+      port_range                = "22"
+      source_addresses          = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                  = "tcp"
+      port_range                = "80"
       source_addresses          = ["0.0.0.0/0", "::/0"]
     }
   ]
@@ -35,7 +40,10 @@ resource "digitalocean_firewall" "master_public" {
     },
     {
       protocol                  = "tcp"
-      port_range                = "5000"
+      destination_addresses     = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol                  = "udp"
       destination_addresses     = ["0.0.0.0/0", "::/0"]
     }
   ]
