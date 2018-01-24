@@ -1,1 +1,0 @@
-# Creates a LOCAL swarm for application testing - Consider moving to Dev
