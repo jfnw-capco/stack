@@ -17,3 +17,6 @@
 
 # Performs the changes to the infrastructure
     terraform apply "terraform.plan"
+
+# Prints the outputs to show it's possible
+    echo $(terraform output master_ip)

@@ -1,52 +1,10 @@
-variable "token" {}
-variable "branch" {}
-variable "image_ids" 
-{
-   type = "map"
-}
-variable "region" {}
-variable "size" {}
-variable "app" {}
-variable "namespace" {}
-variable "domain" {}
 variable "node_count" {}
-variable "node_keys" {
-  type = "list"
-}
-variable "lb_count" {}
-
-provider "digitalocean" {
-    token = "${var.token}"
-}
-
+variable "node_lb_count" {}
 
 # Creates a tag for the nodes 
 resource "digitalocean_tag" "node_tag" {
   name = "node-${var.branch}"
 }
-
-
-# Creates a tag for the masters
-resource "digitalocean_tag" "master_tag" {
-  name = "master-${var.branch}"
-}
-
-
-# Create a new droplet
-resource "digitalocean_droplet" "master" {
-    image  = "${var.image_ids["master"]}"
-    name   = "${var.namespace}-${var.app}-${var.branch}-master-${count.index + 1}"
-    region = "${var.region}"
-    size   = "${var.size}"
-    tags   = ["${digitalocean_tag.master_tag.id}"]
-    private_networking = true
-    ssh_keys = "${var.node_keys}"
-    user_data = <<EOF
-#!/bin/bash
-./startup/startup.sh
-EOF
-}
-
 
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
@@ -57,7 +15,7 @@ resource "digitalocean_droplet" "node" {
     size   = "${var.size}"
     tags   = ["${digitalocean_tag.node_tag.id}"]
     private_networking = true
-    ssh_keys = "${var.node_keys}"
+    ssh_keys = "${var.keys}"
     user_data = <<EOF
 #!/bin/bash
 ./startup/startup.sh
@@ -66,9 +24,9 @@ EOF
 
 
 # Creates the load balancer
-resource "digitalocean_loadbalancer" "public_lb" {
+resource "digitalocean_loadbalancer" "node_lb" {
   name = "${var.namespace}-${var.app}-${var.branch}-public-lb-${count.index + 1}"
-  count  = "${var.lb_count}"
+  count  = "${var.node_lb_count}"
   region = "${var.region}"
 
   forwarding_rule {
@@ -95,7 +53,7 @@ resource "digitalocean_firewall" "node_public" {
     {
       protocol                  = "tcp"
       port_range                = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.public_lb.*.id}"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.node_lb.*.id}"]
     },
     {
       protocol                  = "tcp"
@@ -175,6 +133,6 @@ resource "digitalocean_record" "api" {
   domain = "${var.domain}"
   type   = "A"
   name   = "${var.app}"
-  count  = "${var.lb_count}"
-  value  = "${digitalocean_loadbalancer.public_lb.*.ip[count.index]}"
+  count  = "${var.node_lb_count}"
+  value  = "${digitalocean_loadbalancer.node_lb.*.ip[count.index]}"
 }
