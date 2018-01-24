@@ -77,8 +77,8 @@ jobs:
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/deploy/deploy.sh "$(cat state/image.ids)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
-      - run: bash ops/deploy/http_up.sh "http://api.delineate.io"
-      - run: bash ops/deploy/ping_up.sh "http://registry.delineate.io"
+      - run: bash ops/deploy/up_http.sh "http://api.delineate.io"
+      - run: bash ops/deploy/up_ping.sh "http://registry.delineate.io"
       - persist_to_workspace:
           root: state
           paths:
