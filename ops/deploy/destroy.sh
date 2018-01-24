@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ensures runs in the current directory 
-    cd $(dirname "$0")/config
+    cd $(dirname "$0")
 
 # Gets the branch ID
     BRANCH=$(git rev-parse --short HEAD)
