@@ -72,7 +72,7 @@ jobs:
             - image_ids.id
 
 
-  integration_test:
+  integration_tests:
     docker:
       - image: circleci/python:latest
     steps:
@@ -120,7 +120,7 @@ workflows:
       - destroy_approval: 
           type: approval
           requires:
-           - integration_test
+           - integration_tests
       - destroy:
           requires:
             - destroy_approval
