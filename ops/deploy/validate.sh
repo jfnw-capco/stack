@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ensures runs in the current dir
-    cd $(dirname "$0")/config
+    cd $(dirname "$0")
 
 # initiatlises the directory
     terraform init
