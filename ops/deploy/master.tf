@@ -17,3 +17,11 @@ resource "digitalocean_droplet" "master" {
 ./startup/startup.sh
 EOF
 }
+
+# Add a record to the domain
+resource "digitalocean_record" "master_registry" {
+  domain = "${var.domain}"
+  type   = "A"
+  name   = "registry"
+  value  = "${digitalocean_droplet.master.ipv6_address}"
+}

@@ -19,4 +19,4 @@
     terraform apply "terraform.plan"
 
 # Prints the outputs to show it's possible
-    echo $(terraform output master_ip)
+    echo "IP v6 for Master: $(terraform output master_ip)""
