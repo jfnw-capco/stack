@@ -25,8 +25,8 @@ jobs:
       - image: circleci/python:latest
     steps:
       - checkout
-      - run: python --version
-      - run: pip --version
+      - run: pip install -U pytest
+      - run: pytest --version
 
 
   build_docker_stack:
@@ -77,6 +77,7 @@ jobs:
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/deploy/deploy.sh "$(cat state/image.ids)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
+      - run: bash ops/deploy/up.sh "http://api.delineate.io"
       - persist_to_workspace:
           root: state
           paths:
