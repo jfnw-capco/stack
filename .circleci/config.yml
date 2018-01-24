@@ -25,7 +25,7 @@ jobs:
       - image: circleci/python:latest
     steps:
       - checkout
-      - run: pip install -U pytest
+      - run: sudo pip install -U pytest
       - run: pytest --version
 
 
