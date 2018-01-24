@@ -120,7 +120,7 @@ workflows:
       - destroy_approval: 
           type: approval
           requires:
-           - test
+           - integration_test
       - destroy:
           requires:
             - destroy_approval
