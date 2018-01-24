@@ -40,10 +40,12 @@ resource "digitalocean_firewall" "master_public" {
     },
     {
       protocol                  = "tcp"
+      port_range                = "1-65535"
       destination_addresses     = ["0.0.0.0/0", "::/0"]
     },
     {
       protocol                  = "udp"
+      port_range                = "1-65535"
       destination_addresses     = ["0.0.0.0/0", "::/0"]
     }
   ]
