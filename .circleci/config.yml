@@ -71,7 +71,7 @@ jobs:
           root: state
           paths:
             - terraform.tfstate
-            - image_ids.id
+            - image.ids
 
 
   integration_tests:
