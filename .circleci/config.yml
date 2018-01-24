@@ -27,7 +27,7 @@ jobs:
       - checkout
       - run: sudo pip install -U pytest
       - run: pytest --version
-      - run: pytest dev/app/code
+      # - run: pytest dev/app/code
 
 
   build_docker_stack:
