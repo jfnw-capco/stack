@@ -27,6 +27,7 @@ jobs:
       - checkout
       - run: sudo pip install -U pytest
       - run: pytest --version
+      - run: pytest dev/app/code/tests
 
 
   build_docker_stack:
@@ -77,8 +78,8 @@ jobs:
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/deploy/deploy.sh "$(cat state/image.ids)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
-      - run: bash ops/deploy/up_http.sh "http://api.delineate.io"
-      - run: bash ops/deploy/up_http.sh "http://registry.delineate.io/v2"
+      # - run: bash ops/deploy/up_http.sh "http://api.delineate.io"
+      # - run: bash ops/deploy/up_http.sh "http://registry.delineate.io/v2"
       - persist_to_workspace:
           root: state
           paths:
