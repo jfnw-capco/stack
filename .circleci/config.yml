@@ -27,7 +27,6 @@ jobs:
       - checkout
       - run: sudo pip install -U pytest
       - run: pytest --version
-      # - run: pytest dev/app/code
 
 
   build_docker_stack:
@@ -78,15 +77,44 @@ jobs:
       - run: bash ops/scripts/hashicorp_install.sh "terraform" "0.11.2"
       - run: bash ops/deploy/deploy.sh "$(cat state/image.ids)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
-      - run: bash ops/deploy/up_http.sh "http://api.delineate.io"
-      - run: bash ops/deploy/up_http.sh "http://management.delineate.io"
-      - run: bash ops/deploy/up_http.sh "http://registry.delineate.io"
+      - run: 
+          when: on_fail # Cleans up the environment is possible 
+          command: bash ops/deploy/destroy.sh "$(cat state/image.ids)" /home/circleci/project/state
       - persist_to_workspace:
           root: state
           paths:
             - terraform.tfstate
             - image.ids
 
+  http_endpoints:
+    docker:
+      - image: circleci/python:latest
+    steps:
+      - checkout
+      - run: bash ops/health/http_endpoint.sh "http://api.delineate.io" 200
+      - run: bash ops/health/http_endpoint.sh "http://management.delineate.io" 200
+      - run: bash ops/health/http_endpoint.sh "http://registry.delineate.io" 200
+
+
+  pings:
+    docker:
+      - image: circleci/python:latest
+    steps:
+      - checkout
+      # - run: bash ops/deploy/ping.sh - Node LB  
+      # - run: bash ops/deploy/ping.sh - Nodes
+      # - run: bash ops/deploy/ping.sh - Master
+    
+
+  port_scans:
+    docker:
+      - image: circleci/python:latest
+    steps:
+      - checkout
+      # - run: bash ops/deploy/ping.sh - Node LB  
+      # - run: bash ops/deploy/ping.sh - Nodes
+      # - run: bash ops/deploy/ping.sh - Master
+    
 
   integration_tests:
     docker:
@@ -133,9 +161,20 @@ workflows:
             - build_docker_stack
             - provision_master_vm
             - provision_node_vm
+      - http_endpoints:
+          requires:
+            - deploy
+      - pings:
+          requires:
+            - deploy 
+      - port_scans:
+          requires:
+            - deploy
       - integration_tests:
           requires:
-              - deploy
+            - http_endpoints
+            - pings
+            - port_scans
       - destroy_approval: 
           type: approval
           requires:

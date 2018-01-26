@@ -12,6 +12,9 @@
 # Validates the plan    
     terraform validate -var "token=${DO_TOKEN}" -var "image_ids=$1" -var "branch=${BRANCH}"
 
+# Refreshs against the real resources to ensure that the plan is as correct as possible
+    terraform refresh  -var "token=${DO_TOKEN}" -var "image_ids=$1" -var "branch=${BRANCH}" -lock=true
+
 # Outputs the the plan
     terraform plan -var "token=${DO_TOKEN}" -var "image_ids=$1" -var "branch=${BRANCH}" -out=terraform.plan -lock=true
 
@@ -19,4 +22,5 @@
     terraform apply "terraform.plan"
 
 # Prints the outputs to show it's possible
-    echo "IP v6 for Master: $(terraform output master_ip)"
+    echo $(terraform output reachable) >> reachable.txt
+    echo $(terraform output non_reachable) >> non_reachable.txt

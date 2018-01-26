@@ -22,15 +22,13 @@
 # Creates a local registry for the images to be pushed into
     docker run -d -p 80:5000 --restart=always --name registry registry:2
 
-# Return the token and IP address (needed by nodes)
-    # docker swarm join-token -q worker
-    # docker info --format "{{.Swarm.NodeAddr}}"
+# Initiatizes the swarm 
+    docker swarm init 
 
-# Create a resgistry mirror 
-    # See url saved to bear to reduce network traffic 
-
-# Docker compose can be stood up 
-    # TODO - This will download the images to the mirror, this resolves speed and security
+# Writes the values to the store 
+    echo $(docker swarm join-token -q worker) >> token.swarm
+    echo $(docker info --format "{{.Swarm.NodeAddr}}") >> ip.swarm
+    # TODO: Write a shared data store
 
 # docker stack deploy --composeo -file docker-compose.yml stackdemo
     # Deploys across the swarm 

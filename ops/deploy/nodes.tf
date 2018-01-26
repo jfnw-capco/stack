@@ -1,5 +1,5 @@
-variable "node_count" {}
-variable "node_lb_count" {}
+variable "nodes_count" {}
+variable "nodes_lb_count" {}
 
 # Creates a tag for the nodes 
 resource "digitalocean_tag" "node_tag" {
@@ -9,7 +9,7 @@ resource "digitalocean_tag" "node_tag" {
 # Create a new droplet
 resource "digitalocean_droplet" "node" {
     image  = "${var.image_ids["node"]}"
-    count  = "${var.node_count}"
+    count  = "${var.nodes_count}"
     name   = "${var.namespace}-${var.app}-${var.branch}-node-${count.index + 1}"
     region = "${var.region}"
     size   = "${var.size}"
@@ -24,9 +24,9 @@ EOF
 
 
 # Creates the load balancer
-resource "digitalocean_loadbalancer" "node_lb" {
-  name = "${var.namespace}-${var.app}-${var.branch}-public-lb-${count.index + 1}"
-  count  = "${var.node_lb_count}"
+resource "digitalocean_loadbalancer" "nodes_public_lb" {
+  name = "${var.namespace}-${var.app}-${var.branch}-nodes-public-${count.index + 1}"
+  count  = "${var.nodes_lb_count}"
   region = "${var.region}"
 
   forwarding_rule {
@@ -46,14 +46,14 @@ resource "digitalocean_loadbalancer" "node_lb" {
 }
 
 
-resource "digitalocean_firewall" "node_public" {
+resource "digitalocean_firewall" "nodes_public_fw" {
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-node-public-fw"
+  name = "${var.namespace}-${var.app}-${var.branch}-nodes-public-fw"
   inbound_rule = [
     {
       protocol                  = "tcp"
       port_range                = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.node_lb.*.id}"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.nodes_public_lb.*.id}"]
     },
     {
       protocol                  = "tcp"
@@ -74,9 +74,9 @@ resource "digitalocean_firewall" "node_public" {
   ]
 }
 
-resource "digitalocean_firewall" "swarm_nodes" {
+resource "digitalocean_firewall" "nodes_swarm" {
   droplet_ids = ["${digitalocean_droplet.node.*.id}"]
-  name = "${var.namespace}-${var.app}-${var.branch}-swarm-node-fw"
+  name = "${var.namespace}-${var.app}-${var.branch}-nodes-swarm-fw"
   inbound_rule = [
     {
       protocol                  = "tcp"
@@ -133,8 +133,8 @@ resource "digitalocean_record" "api" {
   domain = "${var.domain}"
   type   = "A"
   name   = "${var.app}"
-  count  = "${var.node_lb_count}"
-  value  = "${digitalocean_loadbalancer.node_lb.*.ip[count.index]}"
+  count  = "${var.nodes_lb_count}"
+  value  = "${digitalocean_loadbalancer.nodes_public_lb.*.ip[count.index]}"
 }
 
 
@@ -143,6 +143,6 @@ resource "digitalocean_record" "management" {
   domain = "${var.domain}"
   type   = "A"
   name   = "management"
-  count  = "${var.node_lb_count}"
-  value  = "${digitalocean_loadbalancer.node_lb.*.ip[count.index]}"
+  count  = "${var.nodes_lb_count}"
+  value  = "${digitalocean_loadbalancer.nodes_public_lb.*.ip[count.index]}"
 }
