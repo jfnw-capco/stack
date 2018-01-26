@@ -3,7 +3,6 @@
 # Ensures runs in the current directory 
     cd $(dirname "$0")   
 
-
     # Ensures manifest will only hold one image id 
     if [ -f "${1}_manifest.json" ]; then
         rm "${1}_manifest.json" -f

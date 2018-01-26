@@ -3,14 +3,13 @@
 FILES=${1}/*.id
 
 OUTPUT="{"
-for f in $FILES
+for FILE in $FILES
 do
-
 	if [ ! $OUTPUT == "{" ]; then
 		OUTPUT="${OUTPUT},"
 	fi 
-	WE="${f%.*}"
-	OUTPUT="${OUTPUT}${WE##*/}=$(cat $f)"
+	WE="${FILE%.*}"
+	OUTPUT="${OUTPUT}${WE##*/}=$(cat $FILE)"
 done
 
-echo "${OUTPUT}}" >>  ${1}/image_ids.id
+echo "${OUTPUT}}" >>  ${1}/image.ids

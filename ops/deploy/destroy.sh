@@ -18,5 +18,10 @@
 # Performs the destroy 
     terraform apply "terraform.plan"
 
-# Additional remove the image from DO
-    #  doctl compute image delete $1 --access-token ${DO_TOKEN} --force
+# Additional remove the DO images
+    FILES=${2}/*.id
+
+    for f in $FILES
+    do
+        doctl compute image delete $(cat $f) --access-token ${DO_TOKEN} --force
+    done

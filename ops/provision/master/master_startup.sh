@@ -2,11 +2,15 @@
 
 # Sets the Swarm ports 
     ufw allow 22/tcp
-    ufw allow 2376/tcp
+    ufw allow 2376/tcp 
     ufw allow 2377/tcp
     ufw allow 7946/tcp
     ufw allow 7946/udp
     ufw allow 4789/udp
+
+# Docker registry port
+    ufw allow 443/tcp
+    ufw allow 80/tcp
 
 # Refreshs the firewall
     ufw --force reload
@@ -15,20 +19,16 @@
 # Restart Docker to be sure
     systemctl restart docker
 
-# Create as the swarm master here 
-    # docker swarm init --advertise-addr <MANAGER-IP>
+# Creates a local registry for the images to be pushed into
+    docker run -d -p 80:5000 --restart=always --name registry registry:2
 
-# This will return the token to use for workers
-    # docker swarm join-token worker
+# Initiatizes the swarm 
+    docker swarm init 
 
-# Create a docker registry in the swarm
-    # docker service create --name registry --publish published=5000,target=5000 registry:2
+# Writes the values to the store 
+    echo $(docker swarm join-token -q worker) >> token.swarm
+    echo $(docker info --format "{{.Swarm.NodeAddr}}") >> ip.swarm
+    # TODO: Write a shared data store
 
-# Docker compose can be stood up 
-    # TODO here
-
-# In the directory where compose is
-    # docker-compose push
-
-# docker stack deploy --compose-file docker-compose.yml stackdemo
+# docker stack deploy --composeo -file docker-compose.yml stackdemo
     # Deploys across the swarm 
