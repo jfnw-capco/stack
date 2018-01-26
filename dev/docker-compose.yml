@@ -10,7 +10,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         labels:
             - "traefik.backend=mgt"
-            - "traefik.frontend.rule=Host:management.delineate.io"
+            - "traefik.frontend.rule=Host:mgt.delineate.io"
 
 
     rp: # Traefik Reverse Proxy 
