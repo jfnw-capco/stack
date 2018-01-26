@@ -142,7 +142,7 @@ resource "digitalocean_record" "api" {
 resource "digitalocean_record" "management" {
   domain = "${var.domain}"
   type   = "A"
-  name   = "management"
+  name   = "mgt"
   count  = "${var.nodes_lb_count}"
   value  = "${digitalocean_loadbalancer.nodes_public_lb.*.ip[count.index]}"
 }

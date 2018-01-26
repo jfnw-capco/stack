@@ -78,7 +78,7 @@ jobs:
       - run: bash ops/deploy/deploy.sh "$(cat state/image.ids)"
       - run: mv ops/deploy/terraform.tfstate state/terraform.tfstate
       - run: 
-          when: on_fail # Cleans up the environment is possible 
+          when: on_fail # Cleans
           command: bash ops/deploy/destroy.sh "$(cat state/image.ids)" /home/circleci/project/state
       - persist_to_workspace:
           root: state

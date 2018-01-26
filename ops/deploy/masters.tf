@@ -115,7 +115,7 @@ resource "digitalocean_firewall" "master_swarm" {
 resource "digitalocean_record" "master_registry" {
   domain = "${var.domain}"
   type   = "A"
-  name   = "registry"
+  name   = "reg"
   count  = "${var.masters_lb_count}"
   value  = "${digitalocean_loadbalancer.masters_public_lb.*.ip[count.index]}"
 }
