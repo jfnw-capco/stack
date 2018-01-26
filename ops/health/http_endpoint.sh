@@ -18,6 +18,6 @@ do
 
     if [ "$ATTEMPTS" -gt "${RETRIES}" ]; then
         echo "Number of tries exceeded"
-        #exit 1
+        exit 1
     fi
 done

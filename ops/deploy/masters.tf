@@ -57,7 +57,7 @@ resource "digitalocean_firewall" "master_public" {
     {
       protocol                  = "tcp"
       port_range                = "80"
-      source_addresses          = ["${digitalocean_loadbalancer.masters_public_lb.*.id}"]
+      source_load_balancer_uids = ["${digitalocean_loadbalancer.masters_public_lb.*.id}"]
     }
   ]
   outbound_rule = [

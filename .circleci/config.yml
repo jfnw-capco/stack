@@ -92,8 +92,8 @@ jobs:
     steps:
       - checkout
       - run: bash ops/health/http_endpoint.sh "http://api.delineate.io" 200
-      - run: bash ops/health/http_endpoint.sh "http://management.delineate.io" 200
-      - run: bash ops/health/http_endpoint.sh "http://registry.delineate.io" 200
+      - run: bash ops/health/http_endpoint.sh "http://mgt.delineate.io" 200
+      - run: bash ops/health/http_endpoint.sh "http://reg.delineate.io" 200
 
 
   pings:
