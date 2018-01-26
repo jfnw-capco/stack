@@ -1,6 +1,6 @@
 # Outputs the reachable IPs 
 output "reachable" {
-  value = ["${digitalocean_loadbalancer.master_lb.*.ip}"]
+  value = ["${digitalocean_loadbalancer.masters_public_lb.*.ip}"]
 }
 
 # Outputs the non-reachable IPs

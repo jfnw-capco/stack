@@ -7,7 +7,7 @@ resource "digitalocean_tag" "master_tag" {
 }
 
 # Create a new droplet
-resource "digitalocean_droplet" "master" {
+resource "digitalocean_droplet" "masters" {
     image               = "${var.image_ids["master"]}"
     count               = "${var.masters_count}"
     name                = "${var.namespace}-${var.app}-${var.branch}-master-${count.index + 1}"
@@ -24,7 +24,7 @@ EOF
 
 
 # Creates the load balancer
-resource "digitalocean_loadbalancer" "master_lb" {
+resource "digitalocean_loadbalancer" "masters_public_lb" {
   name = "${var.namespace}-${var.app}-${var.branch}-master-public-${count.index + 1}"
   count  = "${var.masters_lb_count}"
   region = "${var.region}"
@@ -42,11 +42,11 @@ resource "digitalocean_loadbalancer" "master_lb" {
     protocol = "tcp"
   }
 
-  droplet_ids = ["${digitalocean_droplet.master.*.id}"]
+  droplet_ids = ["${digitalocean_droplet.masters.*.id}"]
 }
 
 resource "digitalocean_firewall" "master_public" {
-  droplet_ids = ["${digitalocean_droplet.master.id}"]
+  droplet_ids = ["${digitalocean_droplet.masters.*.id}"]
   name = "${var.namespace}-${var.app}-${var.branch}-master-public-fw"
   inbound_rule = [
     {
@@ -78,18 +78,8 @@ resource "digitalocean_firewall" "master_public" {
   ]
 }
 
-    ufw allow 2376/tcp 
-    ufw allow 2377/tcp
-    ufw allow 7946/tcp
-    ufw allow 7946/udp
-    ufw allow 4789/udp
-
-# Docker registry port
-    ufw allow 443/tcp
-    ufw allow 80/tcp
-
 resource "digitalocean_firewall" "master_swarm" {
-  droplet_ids = ["${digitalocean_droplet.master.id}"]
+  droplet_ids = ["${digitalocean_droplet.masters.*.id}"]
   name = "${var.namespace}-${var.app}-${var.branch}-master-swarm-fw"
   inbound_rule = [
     {
